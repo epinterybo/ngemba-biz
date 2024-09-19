@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="product_category_form_view" model="ir.ui.view">
+        <field name="name">cw_costing_product.category.form</field>
+        <field name="model">product.category</field>
+        <field name="inherit_id" ref="product.product_category_form_view"></field>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='first']" position="after">
+                <group name="import_fees" string="Customs Info">
+                    <field name="cw_harmonized_code_id" />
+                </group>
+            </xpath>
+                <xpath expr="//group[@name='account_property']" position="after">
+                    <notebook colspan="4">
+                        <page name="cw_customization_costing" string="CW Costing Rate">
+                            <group name="cw_customization">
+                                <field name="x_cw_costing_duty_rate" class="oe_inline" widget="percentage"></field>
+                                <field name="x_cw_costing_warranty_rate" class="oe_inline" widget="percentage"></field>
+                                <field name="x_cw_costing_shipping_rate" class="oe_inline" widget="percentage"></field>
+                                <field name="x_cw_costing_vat_rate" class="oe_inline" widget="percentage"></field>
+                            </group>
+                        </page>
+                    </notebook>
+                </xpath>
+                
+        </field>
+    </record>
+
+</odoo>

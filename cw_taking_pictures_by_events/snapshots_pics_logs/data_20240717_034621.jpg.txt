@@ -1,0 +1,9 @@
+About to create file data_20240717_034621.jpg related to the model pos.order with record id 22
+Image downloaded and saved as /Users/toupesusa/odoo/odoo_17/cw/cw_taking_pictures_by_events/snapshots_pics/data_20240717_034621.jpg
+Handling async callback result failed: can only concatenate str (not "NoneType") to str
+About to create file data_20240717_034621.jpg related to the model pos.order with record id 22
+Image downloaded and saved as /Users/toupesusa/odoo/odoo_17/cw/cw_taking_pictures_by_events/snapshots_pics/data_20240717_034621.jpg
+Handling async callback result failed: can only concatenate str (not "NoneType") to str
+About to create file data_20240717_034621.jpg related to the model pos.order with record id 22
+Image downloaded and saved as /Users/toupesusa/odoo/odoo_17/cw/cw_taking_pictures_by_events/snapshots_pics/data_20240717_034621.jpg
+Handling async callback result failed: can only concatenate str (not "NoneType") to str

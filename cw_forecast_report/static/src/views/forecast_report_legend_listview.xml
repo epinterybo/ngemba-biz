@@ -1,0 +1,7 @@
+<templates>
+    <t t-name="cw_forecast_report.ForecastReportLegendListView" t-inherit="web.ListRenderer" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_list_renderer')]" position="before">
+            <ForecastReportLegend />
+        </xpath>
+    </t>
+</templates>

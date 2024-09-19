@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- List View for cw.taking.positions.cameras -->
+        <record id="view_cw_taking_positions_cameras_tree" model="ir.ui.view">
+            <field name="name">cw.taking.positions.cameras.tree</field>
+            <field name="model">cw.taking.positions.cameras</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="pos_config_id"/>
+                    <field name="stock_location_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form View for cw.taking.positions.cameras -->
+        <record id="view_cw_taking_positions_cameras_form" model="ir.ui.view">
+            <field name="name">cw.taking.positions.cameras.form</field>
+            <field name="model">cw.taking.positions.cameras</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <field name="name" readonly="1"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="pos_config_id"/>
+                            <field name="stock_location_id"/>
+                        </group>
+                        <group>
+                            <field name="cw_taking_positions_cameras_lines_ids">
+                                <tree editable="bottom">
+                                    <field name="camera_url"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Search View for cw.taking.positions.cameras -->
+        <record id="view_cw_taking_positions_cameras_search" model="ir.ui.view">
+            <field name="name">cw.taking.positions.cameras.search</field>
+            <field name="model">cw.taking.positions.cameras</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="pos_config_id"/>
+                    <field name="stock_location_id"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action to open the views -->
+        <record id="action_cw_taking_positions_cameras" model="ir.actions.act_window">
+            <field name="name">Cameras Positions</field>
+            <field name="res_model">cw.taking.positions.cameras</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    </data>
+</odoo>
+

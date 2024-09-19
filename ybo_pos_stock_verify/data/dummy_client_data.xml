@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Dummy Client Record -->
+        <record id="dummy_client" model="res.partner">
+            <field name="name">Dummy Client</field>
+            <field name="company_type">company</field>
+            <field name="street">123 Dummy Street</field>
+            <field name="city">Dummy City</field>
+            <field name="phone">+1234567890</field>
+            <field name="email">dummy@example.com</field>
+            <field name="is_company">False</field>
+            <field name="customer_rank">1</field>
+            <field name="property_stock_customer" ref="stock.stock_location_customers"/>
+        </record>
+    </data>
+</odoo>

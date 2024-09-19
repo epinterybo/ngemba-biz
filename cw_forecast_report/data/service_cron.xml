@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_cron_create_cw_forecast_reporting" model="ir.cron">
+        <field name="name">Create CW Forecast reporting</field>
+        <field name="model_id" ref="model_cw_ocm_forecast"/>
+        <field name="state">code</field>
+        <field name="code">model.scheduler_job_to_run()</field>
+        <field name="interval_number">12</field>
+        <field name="interval_type">hours</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="True"/>
+        <field name="active" eval="True"/>
+    </record>
+
+    <record id="ir_cron_cw_forecast_reporting_sync_mssl" model="ir.cron">
+        <field name="name">CW Forecast reporting Sync</field>
+        <field name="model_id" ref="model_cw_ocm_forecast"/>
+        <field name="state">code</field>
+        <field name="code">model.execute_external_script()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="ir_cron_cw_forecast_reporting_scheduler_job_to_run_continue" model="ir.cron">
+        <field name="name">CW Forecast Running - Continuing</field>
+        <field name="model_id" ref="model_cw_ocm_forecast"/>
+        <field name="state">code</field>
+        <field name="code">model.scheduler_job_to_run_continue()</field>
+        <field name="interval_number">3000</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="nextcall" eval="(DateTime.now().replace(hour=2, minute=0) + timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')" />
+        <field name="doall" eval="False"/>
+        <field name="active" eval="True"/>
+    </record>
+
+    <record id="ir_cron_cw_forecast_reporting_call_scheduler_job_to_run_continue" model="ir.cron">
+        <field name="name">CW Call For Forecast Running - Continuing</field>
+        <field name="model_id" ref="model_cw_ocm_forecast"/>
+        <field name="state">code</field>
+        <field name="code">model.call_scheduler_job_to_run_continue()</field>
+        <field name="interval_number">3000</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="nextcall" eval="(DateTime.now().replace(hour=2, minute=0) + timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')" />
+        <field name="doall" eval="False"/>
+        <field name="active" eval="True"/>
+    </record>
+
+    <record id="ir_cron_cw_forecast_product_data_archive" model="ir.cron">
+        <field name="name">CW Product Archive</field>
+        <field name="model_id" ref="model_cw_product_data_daily_archive"/>
+        <field name="state">code</field>
+        <field name="code">model.scheduler_job_to_run()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="active" eval="True"/>
+    </record>
+
+
+    <record id="ir_cron_create_cw_forecast_reportig_link_product_from_order_line_to_product" model="ir.cron">
+        <field name="name">Create CW Forecasting Order Line Link Old Product to New Product</field>
+        <field name="model_id" ref="model_cw_old_order_line"/>
+        <field name="state">code</field>
+        <field name="code">model.link_product_product()</field>
+        <field name="interval_number">3</field>
+        <field name="interval_type">hours</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="True"/>
+        <field name="active" eval="False"/>
+    </record>
+
+
+    <record id="ir_cron_create_cw_forecast_link_old_invoice_line_to_omd_invoice" model="ir.cron">
+        <field name="name">Create CW Forecasting Order Line Link Old order line to Old Invoice (Run after linking making x_cw_list_id is the right place, contact x_cw_list_id right place and invoice order connected to user)</field>
+        <field name="model_id" ref="model_cw_old_order_line"/>
+        <field name="state">code</field>
+        <field name="code">model.link_invoice_order()</field>
+        <field name="interval_number">3</field>
+        <field name="interval_type">hours</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="True"/>
+        <field name="active" eval="False"/>
+    </record>
+
+
+    <record id="ir_cron_create_cw_forecast_link_partners_to_old_purcahse_order" model="ir.cron">
+        <field name="name">Create CW Forecasting Link partners to Old Purchase Order</field>
+        <field name="model_id" ref="model_cw_old_purchase_order"/>
+        <field name="state">code</field>
+        <field name="code">model.link_provider()</field>
+        <field name="interval_number">3</field>
+        <field name="interval_type">hours</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="True"/>
+        <field name="active" eval="False"/>
+    </record>
+
+
+    <record id="ir_cron_create_cw_forecast_link_product_to_old_product_delivery" model="ir.cron">
+        <field name="name">Create CW Forecasting Link product old to product delivery</field>
+        <field name="model_id" ref="model_cw_old_product_delivery"/>
+        <field name="state">code</field>
+        <field name="code">model.link_product_product()</field>
+        <field name="interval_number">3</field>
+        <field name="interval_type">hours</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="True"/>
+        <field name="active" eval="False"/>
+    </record>
+
+
+    <record id="ir_cron_create_cw_forecast_link_old_link_purchase_order" model="ir.cron">
+        <field name="name">Create CW Forecasting Link Purchase Order</field>
+        <field name="model_id" ref="model_cw_old_product_delivery"/>
+        <field name="state">code</field>
+        <field name="code">model.link_purchase_order()</field>
+        <field name="interval_number">3</field>
+        <field name="interval_type">hours</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="True"/>
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="ir_cron_create_cw_forecast_link_old_sale_to_customer_id" model="ir.cron">
+        <field name="name">Create CW Forecasting Link sale to customer id</field>
+        <field name="model_id" ref="model_cw_old_sale_invoice"/>
+        <field name="state">code</field>
+        <field name="code">model.link_customer_id()</field>
+        <field name="interval_number">3</field>
+        <field name="interval_type">hours</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="True"/>
+        <field name="active" eval="False"/>
+    </record>
+
+
+    <record id="ir_cron_create_cw_forecast_link_product_to_old_product_stocktake" model="ir.cron">
+        <field name="name">Create CW Forecasting Link for stocktake Old Product to product</field>
+        <field name="model_id" ref="model_cw_old_stock_take"/>
+        <field name="state">code</field>
+        <field name="code">model.link_product_product()</field>
+        <field name="interval_number">3</field>
+        <field name="interval_type">hours</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="True"/>
+        <field name="active" eval="False"/>
+    </record>
+
+
+    <record id="ir_cron_create_cw_forecast_link_po_order_line_to_product" model="ir.cron">
+        <field name="name">Create CW Forecasting Link PO Order line to product</field>
+        <field name="model_id" ref="model_cw_old_po_order_line"/>
+        <field name="state">code</field>
+        <field name="code">model.link_product_product()</field>
+        <field name="interval_number">3</field>
+        <field name="interval_type">hours</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="True"/>
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="ir_cron_create_cw_forecast_link_po_order_line_to_currency" model="ir.cron">
+        <field name="name">Create CW Forecasting Link for stocktake Old Product to Currency</field>
+        <field name="model_id" ref="model_cw_old_po_order_line"/>
+        <field name="state">code</field>
+        <field name="code">model.link_to_currency()</field>
+        <field name="interval_number">3</field>
+        <field name="interval_type">hours</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="True"/>
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="ir_cron_create_cw_forecast_take_xlistid_to_list_id" model="ir.cron">
+        <field name="name">CW Forecasting Take x_studio_xlistid to x_cw_list_id</field>
+        <field name="model_id" ref="model_product_template"/>
+        <field name="state">code</field>
+        <field name="code">model.check_and_update_list_id()</field>
+        <field name="interval_number">6</field>
+        <field name="interval_type">months</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="True"/>
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="ir_cron_create_cw_forecast_take_xlistid_to_list_id_for_partner" model="ir.cron">
+        <field name="name">CW Forecasting Take x_studio_xlistid to x_cw_list_id for Partner</field>
+        <field name="model_id" ref="model_res_partner"/>
+        <field name="state">code</field>
+        <field name="code">model.check_and_update_list_id()</field>
+        <field name="interval_number">6</field>
+        <field name="interval_type">months</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="True"/>
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="ir_cron_forecast_link_old_provide_to_new_system_po" model="ir.cron">
+        <field name="name">CW Forecasting Link Old provider to current contact</field>
+        <field name="model_id" ref="model_cw_old_po_order_line"/>
+        <field name="state">code</field>
+        <field name="code">model.link_vendor_id_to_new_contact()</field>
+        <field name="interval_number">6</field>
+        <field name="interval_type">months</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="True"/>
+        <field name="active" eval="False"/>
+    </record>
+
+
+
+</odoo>

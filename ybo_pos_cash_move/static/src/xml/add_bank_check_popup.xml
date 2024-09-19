@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+	<t t-name="ybo_pos_cash_move.add_bank_check_popup" owl="1">
+		<div class="popup popup-confirm">
+			<div class="modal-header">
+				<h4 class="modal-title title drag-handle">
+					Add Bank Cheque
+				</h4>
+			</div>
+			<main class="modal-body">
+				<form class="text-start">
+					<div class="mb-3">
+						<label for="bank-name">
+							Bank
+						</label>
+						<input type="text" class="form-control" id="bank-name" aria-describedby="bank-name" t-model="state.bank" />
+					</div>
+					<div class="mb-3">
+						<label for="account_holder">
+							Drawer
+						</label>
+						<input type="text" class="form-control" id="account_holder" t-model="state.drawer" />
+					</div>
+					<div class="mb-3">
+						<label for="account_holder">
+							Account Number
+						</label>
+						<input type="text" class="form-control" id="account_holder" t-model="state.account_number" />
+					</div>
+					<div class="mb-3">
+						<label for="account_holder">
+							Cheque Number
+						</label>
+						<input type="text" class="form-control" id="account_holder" t-model="state.cheque_number" />
+					</div>
+					<div class="mb-3">
+						<label for="amount">
+							Amount
+						</label>
+						<div class="input-group mb-3">
+							<input type="number" class="form-control" aria-label="Amount" aria-describedby="amount" t-model="state.amount" />
+							<span class="input-group-text" id="amount">
+								VT
+							</span>
+						</div>
+					</div>
+				</form>
+			</main>
+			<footer class="footer modal-footer">
+				<div class="button confirm btn btn-lg btn-primary" t-on-click="addBankCheck">
+					Add
+				</div>
+				<div class="button cancel btn btn-lg btn-secondary" t-on-click="close">
+					Cancel
+				</div>
+			</footer>
+		</div>
+	</t>
+</templates>

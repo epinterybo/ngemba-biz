@@ -1,0 +1,71 @@
+.bill-counting-container {
+  margin: 0 20%;
+}
+.operation_t {
+  display: flex;
+  width: 100%;
+  align-items: stretch;
+  border: 1px solid #71639e;
+  border-radius: 5px;
+
+  & > :not(:last-child) {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  & > :not(:first-child) {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+}
+
+.operation_t_cash_out, .operation_t_cash_in {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+
+  .form-check-input {
+    margin: 0 0 3px 0;
+  }
+
+}
+
+.amount_counted {
+  padding: 13px;
+}
+.text-right {
+  text-align: right;
+}
+.fw-bold{
+  font-weight: bold;
+}
+
+.bank-check-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.bank-check-card {
+  background-color: #f9f9f9;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.bank-check-card h3 {
+  margin: 0;
+  font-size: 1.2em;
+  color: #333;
+}
+
+.bank-check-card p {
+  margin: 5px 0;
+  font-size: 1em;
+  color: #555;
+}
+
+.bank-check-card p strong {
+  color: #000;
+}

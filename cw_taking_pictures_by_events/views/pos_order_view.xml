@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- custom_pos_order_view.xml -->
+<odoo>
+    <!-- Inherit the form view of pos.order -->
+    <record id="pos_order_taking_picture" model="ir.ui.view">
+        <field name="name">pos.order.taking.picture</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='extra']" position="after">
+                <page string="Camera Pictures" name="camera_picture">
+                    <group>
+                        <field name="cw_taken_picture_details_ids" readonly="1">
+                            <tree row_class="custom-row-height">
+                                <!-- <field name="picture_file_path"/> -->
+                                <field name="picture_data" widget="image" nolabel="1" style="max-width: 600px; max-height: 600px;"/>
+                            </tree>
+                        </field>
+                    </group>
+                </page>
+            </xpath>
+            <!-- Add the image field after a specific field, for example, after the 'name' field -->
+            <!--
+            <xpath expr="//field[@name='fiscal_position_id']" position="after">
+                <field name="picture_file_path" />
+                <field name="picture_data" widget="image" style="max-width: 400px; max-height: 400px;" invisible="picture_file_path == False"/>
+            </xpath>
+            -->
+        </field>
+    </record>
+</odoo>

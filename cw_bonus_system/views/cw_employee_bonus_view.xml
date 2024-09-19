@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Tree View -->
+    <record id="cw_bonus_employee_bonus_tree_view" model="ir.ui.view">
+        <field name="name">cw.bonus.employee.tree</field>
+        <field name="model">cw.bonus.employee</field>
+        <field name="arch" type="xml">
+            <tree default_order="name asc">
+                <field name="name"/>
+                <field name="user_id" widget="many2one"/>
+                <field name="employee_id" widget="many2one" />
+                <field name="code_employee" />
+            </tree>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="cw_bonus_employee_bonus_tree_view_search" model="ir.ui.view">
+        <field name="name">cw.bonus.employee.search</field>
+        <field name="model">cw.bonus.employee</field>
+        <field name="arch" type="xml">
+            <search string="Period">
+                <field name="name" string="Search by name" />
+                <field name="employee_id" string="Search by Employee" />
+                <field name="user_id" string="Search by user"/>
+                <field name="code_employee" string="Search by code employee"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="cw_bonus_employee_bonus_form_view" model="ir.ui.view">
+        <field name="name">cw.bonus.employee.form</field>
+        <field name="model">cw.bonus.employee</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <field name="image_employee" widget="image" nolabel="1" class="image-field" />
+                    <group>
+                        <field name="name"/>
+                        <field name="code_employee"  />
+                    </group>
+                    
+                    
+                    <notebook colspan="4">
+                        <page name="Employees" string="Employees">
+                            <group>
+                                <field name="employee_id" />
+                            </group>
+                        </page>
+                        <page name="Users" string="Users">
+                            <group>
+                                <field name="user_id" />
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action for the Tree View -->
+    <record id="action_cw_bonus_employee_bonus" model="ir.actions.act_window">
+        <field name="name">Employees List</field>
+        <field name="res_model">cw.bonus.employee</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="cw_bonus_employee_bonus_tree_view"/>
+    </record>
+
+    
+
+</odoo>

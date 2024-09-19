@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="modify_pos_refund_button" inherit_id="point_of_sale.RefundButton">
+        <xpath expr="//button" position="attributes">
+            <attribute name="t-att-disabled">disable_refund_button_fn()</attribute>
+            <attribute name="t-att-onclick" t-if="disable_refund_button_fn">#</attribute>
+        </xpath>
+    </template>
+</odoo>

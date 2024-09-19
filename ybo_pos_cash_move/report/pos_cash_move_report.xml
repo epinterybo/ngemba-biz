@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_poscashmove">
+        <t t-call="web.html_container">
+            
+                <t t-set="o" t-value="doc"/>
+                
+
+                <!-- Styles for the PDF -->
+                <style>
+                    .page {
+                        width: 100%;
+                        margin: 0;
+                        padding: 0;
+                        font-family: 'Arial', sans-serif;
+                        font-size: 12px;
+                    }
+                    .header, .footer {
+                        width: 100%;
+                        text-align: center;
+                        margin-bottom: 20px;
+                    }
+                    .content {
+                        width: 100%;
+                    }
+                    .left, .right {
+                        display: inline-block;
+                        vertical-align: top;
+                        width: 47%;
+                    }
+                    .right {
+                        text-align: right;
+                    }
+                    .table {
+                        width: 100%;
+                        border-collapse: collapse;
+                        margin-bottom: 20px;
+                    }
+                    .table th, .table td {
+                        border: 1px solid #D3D3D3 ;
+                        padding: 5px;
+                        text-align: left;
+                    }
+                    .no-border {
+                        border: none;
+                    }
+                    .inner-box {
+                        border: 1px solid #D3D3D3;
+                        padding:5px;
+                        text-align:center;
+                        margin-bottom : 10px;
+                    }
+                    .text-left {
+                        text-align:left;
+                    }
+                    .text-right {
+                        text-align:right;
+                    }
+                    .company-logo {
+                        max-height: 100px; margin-bottom:15px
+                    }
+                    .right_table td{
+                        padding : 10px 5px;
+                        font-size : 13px ;
+                    }
+
+                    .left_table td{
+                        padding : 14px 5px;
+                        font-size : 13px ;
+                    }
+
+                    .down_table td{
+                        padding : 10px 5px;
+                        font-size : 12px ;
+                    }
+
+                    .first_tab{
+                        min-width : 200px
+                    }
+
+                    .page-break {
+                        page-break-before: always;
+                    }
+
+                    .img_icon {
+                        height : 70px;
+                        width : 100px;
+                    }
+
+                    .flex{
+                        display : flex;
+                        flex-direction : row;
+                        align-items : center;
+                        justify-content : center;
+                    }
+
+                    
+
+                </style>
+
+                <!-- Main content -->
+                <div class="page">
+                    <!--                    <img t-if="res_company.logo" class="company-logo" t-att-src="'/web/image/' + res_company.id + '/' + res_company.logo" style=""/>-->
+                    <!-- 
+                    <div class="header">
+                        <p>Branch: ANZ Bank(Vanuatu) Limited</p>
+                        <p>(CW deposit ID:11513)</p>
+                    </div>
+                    -->
+                    <div class="content">
+                        <div class="left">
+                            <table class="table left_table">
+                                <tbody>
+                                    <tr>
+                                        <td colspan="2">
+                                            <div class="flex">
+                                                <div><b>Branch</b></div>
+                                                <img class="img_icon" src="/ybo_pos_cash_move/static/src/img/linux.png"/>
+                                                <div>ANZ Bank(Vanuatu) Limited </div>
+                                            </div>
+                                            <div>(CW deposit ID:11513)</div>    
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <p>
+                                                <b>Paid In by(Signature):</b>
+                                            </p>
+                                            <br/>
+                                        </td>
+                                        <td>
+                                            <p>Teller:</p>
+                                            <br/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <p>
+                                                <b>Account Number:</b>
+                                            </p>
+                                            <div class="inner-box">1 : 9 : 1 : 2 : 7 : 8 : 8</div>
+                                        </td>
+                                        <td>
+                                            <p>
+                                                <b>Date:</b>
+                                            </p>
+                                            <div class="inner-box">
+                                                <t t-out="date"/>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">
+                                            <p>
+                                                <b>Account Name</b>
+                                                Computer World
+                                            </p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                        <div class="right">
+                            <table class="table right_table">
+                                <tbody>
+                                    <tr>
+                                        <td>10,000</td>
+                                        <td>x
+                                            <b>
+                                                <t t-out="bills['total_10000_vt']"/>
+                                            </b>
+                                            =
+                                            <t t-out="bills['total_10000_vt'] * 10000"/>
+                                            
+                                        </td>
+                                        <td>100</td>
+                                        <td>x
+                                            <b>
+                                                <t t-out="bills['total_100_vt']"/>
+                                            </b>
+                                            =
+                                            <t t-out="bills['total_100_vt'] * 100"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>5,000</td>
+                                        <td>x
+                                            <b>
+                                                <t t-out="bills['total_5000_vt']"/>
+                                            </b>
+                                            =
+                                            <t t-out="bills['total_5000_vt'] * 5000"/>
+                                        </td>
+                                        <td>50</td>
+                                        <td>x
+                                            <b>
+                                                <t t-out="bills['total_50_vt']"/>
+                                            </b>
+                                            =
+                                            <t t-out="bills['total_50_vt'] * 50"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>2,000</td>
+                                        <td>x
+                                            <b>
+                                                <t t-out="bills['total_2000_vt']"/>
+                                            </b>
+                                            =
+                                            <t t-out="bills['total_2000_vt'] * 2000"/>
+                                        </td>
+                                        <td>20</td>
+                                        <td>x
+                                            <b>
+                                                <t t-out="bills['total_20_vt']"/>
+                                            </b>
+                                            =
+                                            <t t-out="bills['total_20_vt'] * 20"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>1,000</td>
+                                        <td>x
+                                            <b>
+                                                <t t-out="bills['total_1000_vt']"/>
+                                            </b>
+                                            =
+                                            <t t-out="bills['total_1000_vt'] * 1000"/>
+                                        </td>
+                                        <td>10</td>
+                                        <td>x
+                                            <b>
+                                                <t t-out="bills['total_10_vt']"/>
+                                            </b>
+                                            =
+                                            <t t-out="bills['total_10_vt'] * 10"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>500</td>
+                                        <td>x
+                                            <b>
+                                                <t t-out="bills['total_500_vt']"/>
+                                            </b>
+                                            =
+                                            <t t-out="bills['total_500_vt'] * 500"/>
+                                        </td>
+                                        <td>5</td>
+                                        <td>x
+                                            <b>
+                                                <t t-out="bills['total_5_vt']"/>
+                                            </b>
+                                            =
+                                            <t t-out="bills['total_5_vt'] * 5"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>200</td>
+                                        <td>x
+                                            <b>
+                                                <t t-out="bills['total_200_vt']"/>
+                                            </b>
+                                            =
+                                            <t t-out="bills['total_200_vt'] * 200"/>
+                                        </td>
+                                        <td></td>
+                                        <td ></td>
+                                    </tr>
+                                    <tr>
+                                        <td >Total notes</td>
+
+                                        <td >
+                                            <t t-set="totalnotes"
+                                               t-value="bills['total_10000_vt'] * 10000 + bills['total_5000_vt'] * 5000 + bills['total_2000_vt'] * 2000 + bills['total_1000_vt'] * 1000"/>
+                                            <t t-out="totalnotes"/>
+                                        </td>
+                                        <td>Total Coins</td>
+                                        <td >
+                                            <t t-set="totalcoins"
+                                               t-value="bills['total_100_vt'] * 100 + bills['total_50_vt'] * 50 + bills['total_20_vt'] * 20 + bills['total_10_vt'] * 10 + bills['total_5_vt'] * 5"/>
+                                            <t t-out="totalcoins"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                        </td>
+                                        <td>
+                                        </td>
+                                        <td>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p class="text-left">
+                                <b>Approve to deposit with a variation of less than 100 vatu of the total amount</b>
+                            </p>
+                        </div>
+                    </div>
+
+                    <p>With recourse on all documents. Proceeds of cheques etc. unavailable until cleared. The bank
+                        does
+                        not receive deposits marked for specific application, or if it is should it accepts no
+                        responsibility for misapplication. The bank(s) is/are not responsible for delays in
+                        transmitting
+                        this deposit if it is lodged at another bank or branch.
+                    </p>
+
+                </div>
+                <div class="page-break"></div>
+                <!-- Second page content -->
+                <div class="page">
+                    <div class="content">
+                        <table class="table down_table">
+                            <tbody>
+                                <tr>
+                                    <td class="first_tab"><b>Drawer</b></td>
+                                    <td>
+                                        <b>Bank</b>
+                                    </td>
+                                    <td>
+                                        <b>CHQ# - Account#</b>
+                                    </td>
+                                    <td>
+                                        <b>Amount</b>
+                                    </td>
+                                </tr>
+                                    
+
+                                <t t-foreach="cheques" t-as="cheque">
+                                    <tr>
+                                        <td><t t-out="cheque.drawer"/></td>
+                                        <td><t t-out="cheque.bank"/></td>
+                                        <td><t t-out="cheque.check_number"/>-<t t-out="cheque.account_number"/></td>
+                                        <td><t t-out="cheque.amount"/></td>
+                                    </tr>
+                                </t>
+                                <tr>
+                                    <td colspan="2">
+                                    </td>
+                                    <td>
+                                        Total Other CHQ
+                                    </td>
+                                    <td>
+                                        <t t-out="total_cheq_other"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                    </td>
+                                    <td>
+                                        Total <b>ANZ</b> CHQ
+                                    </td>
+                                    <td>
+                                        <t t-out="total_cheq_anz"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                    </td>
+                                    <td>
+                                        Total Notes and Coins
+                                    </td>
+                                    <td>
+                                        <t t-out="totalcoins + totalnotes "/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                    </td>
+                                    <td>
+                                        Grand Total Deposit
+                                    </td>
+                                    <td>
+                                        <t t-out="totalcoins + totalnotes + total_cheq_other + total_cheq_anz"/>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                    </div>
+                </div>
+        </t>
+    </template>
+</odoo>

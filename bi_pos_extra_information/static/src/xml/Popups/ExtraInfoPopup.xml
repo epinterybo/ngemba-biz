@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="bi_pos_extra_information.ExtraInfoPopup">
+        <div class="popup popup-textinput">
+            <div class="modal-header" style="color: black !important;">
+                <h4 class="modal-title"><t t-esc="props.title" /></h4>
+            </div>
+            <div class="modal-body">
+                 <div class="delivery-note" style="margin-top:16px; height: 250px !important; overflow: auto;">
+                    <t t-if="props.extra_fields_data">
+                        <t t-foreach="props.extra_fields_data" t-as="extra_field" t-key="extra_field.id">
+                            <div style="text-align: initial;">
+                                <t t-esc="extra_field.field_name"/> :
+                                <input type="text" style="width: 100% !important; margin-top: 3px;"
+                                       t-att-id="extra_field.id"/>
+                            </div>
+                            <br/>
+                        </t>
+                    </t>
+                 </div>
+            </div>
+            <footer class="footer modal-footer">
+                <div class="button cancel btn btn-lg btn-primary" t-on-click="save" style="border: 1px solid #000000; color: #ffffff;
+                                    font-size: 15px; background: #017e84">
+                    <t t-esc="props.confirmText"/>
+                </div>
+                <div class="button cancel btn btn-lg btn-secondary" t-on-click="cancel" style="border: 1px solid #000000; color: black; font-size: 15px;">
+                    <t t-esc="props.cancelText" />
+                </div>
+            </footer>
+        </div>
+    </t>
+</templates>

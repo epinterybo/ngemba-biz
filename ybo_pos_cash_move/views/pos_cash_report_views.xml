@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="ybo_pos_cash_move_pos_cash_report_action" model="ir.actions.act_window">
+        <field name="name">Cash in/out Report</field>
+        <field name="res_model">ybo_pos_cash_move.pos_cash_report</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <h3 class="oe_view_nocontent_create">No Reports created !</h3>
+        </field>
+    </record>
+    <record id="view_pos_cash_report_tree" model="ir.ui.view">
+        <field name="name">ybo_pos_cash_move_pos_cash_report.tree</field>
+        <field name="model">ybo_pos_cash_move.pos_cash_report</field>
+        <field name="arch" type="xml">
+            <tree string="POS Cash Report" create="false" default_order="create_date desc">
+                <field name="reference_code"/>
+                <field name="pos_name"/>
+                <field name="cashier_id"/>
+                <field name="count_type"/>
+                <field name="state" string="State"/>
+                <field name="currency_id" column_invisible="True" on_change="1"/>
+                <field name="formatted_total_counted" string="Amount (VT)"/>
+
+                <field name="state" widget="badge" decoration-danger="state == 'rejected'" decoration-info="state == 'pending'" decoration-success="state =='approved'"/>
+                <field name="admin_id" string="Approved by" optional="hide"/>
+                <field name="approval_date_time" string="Approved On" optional="hide"/>
+                <field name="create_date" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="ybo_pos_cash_move_pos_cash_report_search" model="ir.ui.view">
+        <field name="name">ybo_pos_cash_move_pos_cash_report.search</field>
+        <field name="model">ybo_pos_cash_move.pos_cash_report</field>
+        <field name="arch" type="xml">
+            <search string="POS Cash Report Search">
+                <field name="pos_name"/>
+                <field name="pos_session"/>
+                <field name="cashier_id"/>
+                <field name="count_type"/>
+                <field name="create_date" string="Created Date"/>
+
+                <filter string="Created Date" name="created_date" domain="[]" context="{'group_by':'create_date'}"/>
+                <filter string="POS Name" name="pos_name" domain="[]" context="{'group_by':'pos_name'}"/>
+                <filter string="POS Session" name="pos_session" domain="[]" context="{'group_by':'pos_session'}"/>
+                <filter string="Cashier" name="cashier_id" domain="[]" context="{'group_by':'cashier_id'}"/>
+                <filter string="Count Type" name="count_type" domain="[]" context="{'group_by':'count_type'}"/>
+
+                <filter string="Count Type In" name="count_type_in" domain="[('count_type', '=', 'in')]"/>
+                <filter string="Count Type Out" name="count_type_out" domain="[('count_type', '=', 'out')]"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Form -->
+    <record id="ybo_pos_cash_move_pos_cash_report_form" model="ir.ui.view">
+        <field name="name">ybo_pos_cash_move_pos_cash_report.form</field>
+        <field name="model">ybo_pos_cash_move.pos_cash_report</field>
+        <field name="arch" type="xml">
+            <form string="Validation form" create="false">
+                <header>
+                    <button name="set_approved" icon="fa-check"
+                            class="btn btn-primary" type="object" string="Approve"
+                            invisible="state in ['approved','rejected']"
+                            confirm="Are you sure about approving this transaction ?"/>
+
+                    <button name="set_reject" icon="fa-times"
+                            class="btn btn-secondary" type="object" string="Reject"
+                            invisible="state in ['approved','rejected']"
+                            confirm="Are you sure about approving this transaction ?"/>
+
+                    <field name="state" widget="statusbar" statusbar_visibile="pending,approved,rejected"/>
+                </header>
+                <sheet>
+                    <div class="d-flex gap-4">
+                        <div class="w-100 w-md-30 ">
+                            <h2>
+                                <p class="o_form_label o_form_label_readonly">
+                                    <small>Amount counted</small>
+                                </p>
+                                <field name="currency_id" invisible="1"/>
+                                <field name="total_counted" widget="monetary"
+                                    options="{'currency_field': 'currency_id'}" decoration-danger=" (expected_amount - total_counted ) > 0 " decoration-warning=" (total_counted- expected_amount ) > 0 "/>
+                            </h2>
+                        
+                            <group>
+                                <field name="total_bill_coin"/>
+                                <field name="total_cheque"  />
+                                <field name="count_type"/>
+                                <field name="cashier_id"/>
+                            </group>
+                        </div>
+                        <div class="w-100 w-md-30 ">
+                            <h2>
+                                <p class="o_form_label o_form_label_readonly">
+                                    <small>Amount Expected</small>
+                                </p>
+                                <field name="currency_id" invisible="1"/>
+                                <field name="expected_amount" widget="monetary"
+                                    options="{'currency_field': 'currency_id'}" />
+                            
+                            </h2>
+                            <group>
+                                <field name="expected_cash" />
+                                <field name='total_cheque_expected'  />
+                                <field name="pos_session" />
+                                <field name="pos_name"/>
+                            </group>
+                        </div>
+                        <div class="w-100 w-md-40">
+                            <h2>
+                                <p class="o_form_label o_form_label_readonly">
+                                    <small>Difference</small>
+                                </p>
+                                <field name="currency_id" invisible="1"/>
+                                <field name="total_difference" widget="monetary"
+                                    options="{'currency_field': 'currency_id'}"/>
+                            </h2>
+                            <group>
+                                <field name='total_amount_sold' />
+                            </group>
+                            <h2>
+                                <p class="o_form_label o_form_label_readonly">
+                                    Reason for operation
+                                </p>
+                            
+                                <field name="cashier_comment" />
+                            </h2>
+                            <h2>
+                                <p class="o_form_label o_form_label_readonly">
+                                    Reason for operation
+                                </p>
+                            
+                                <field name="admin_comment" />
+                            </h2>
+                            
+                        </div>
+                    </div>
+                    <notebook>
+                        <page name="bill_coin" string="Bills / Coins">
+                            <div class="d-flex gap-4"> 
+                                <div class="w-50 w-md-25">
+                                    <group>
+                                        <field name="total_10000_vt" string="10000 VT"/>
+                                        <field name="total_2000_vt" string="2000 VT"/>
+                                        <field name="total_5000_vt" string="5000 VT"/>
+                                        <field name="total_1000_vt" string="1000 VT"/>
+                                        <field name="total_500_vt" string="500 VT"/>
+                                        <field name="total_200_vt" string="200 VT"/>
+                                
+                                    </group>
+                                </div>
+                                <div class="w-50 w-md-25">
+                                    <group>
+                                        
+                                        <field name="total_100_vt" string="100 VT"/>
+                                        <field name="total_50_vt" string="50 VT"/>
+                                        <field name="total_20_vt" string="20 VT"/>
+                                        <field name="total_10_vt" string="10 VT"/>
+                                        <field name="total_5_vt" string="5 VT"/>
+                                    </group>
+                                </div>
+
+                            </div>
+                        </page>
+                        
+                        <page invisible="count_type=='in'" name="cheques" string="Cheques">
+                            <field name="cheques_id">
+                                <tree editable="bottom">
+                                    <field class="text-align-center" name="amount" widget="monetary"
+                                        options="{'currency_field': 'currency_id'}" />
+                                    <field name="bank" />
+                                    <field name="drawer" />
+                                    <field name="account_number" />
+                                    <field name="cheque_number" />
+                                    <field name="currency_id" invisible="1==1"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page invisible="count_type=='in'" name="expected_cheques" string="Expected cheques">
+                            <field name="expected_cheques">
+                                <tree editable="bottom">
+                                    <field class="text-align-center" name="amount" widget="monetary"
+                                        options="{'currency_field': 'currency_id'}" />
+                                    <field name="bank_id" />
+                                    <field name="partner_id" />
+                                    <field name="check_bank_account" />
+                                    <field name="check_number" />
+                                    <field name="currency_id" invisible="1"/>
+                                </tree>
+
+                            </field>
+                        </page>
+                    </notebook>
+                    
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!-- Menu -->
+    <menuitem
+            id="ybo_pos_cash_move_pos_cash_report_menu"
+            name="Cash in/out report"
+            action="ybo_pos_cash_move_pos_cash_report_action"
+            parent="point_of_sale.menu_point_rep"
+            sequence="6"/>
+</odoo>

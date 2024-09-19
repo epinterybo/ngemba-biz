@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="cw_forecast_report.ReportLegend">
+        <div class="o_purchase_dashboard container-fluid py-4 border-bottom bg-view">
+            <div class="row justify-content-between gap-3 gap-lg-0">
+                <div class="col-12 col-lg-3 col-xl-3 col-xxl-2 flex-grow-1 flex-lg-grow-0 flex-shrink-0">
+                    <span><strong>Active</strong></span>: IS product active ? <br /><br />
+                </div>
+                <div class="col-12 col-lg-3 col-xl-3 col-xxl-2 flex-grow-1 flex-lg-grow-0 flex-shrink-0">
+                    <span><strong>S. Status</strong></span>: Stock Selling Status <br /><br />
+                </div>
+                <div class="col-12 col-lg-3 col-xl-3 col-xxl-2 flex-grow-1 flex-lg-grow-0 flex-shrink-0">
+                    <span><strong>S.B.O</strong></span>: Should Be Ordered  <br /><br />
+                </div>
+                <div class="col-12 col-lg-3 col-xl-3 col-xxl-2 flex-grow-1 flex-lg-grow-0 flex-shrink-0">
+                    <span><strong>To Order</strong></span>: Recommenended To Order <br /><br />
+                </div>
+                <div class="col-12 col-lg-3 col-xl-3 col-xxl-2 flex-grow-1 flex-lg-grow-0 flex-shrink-0">
+                    <span><strong>In Target</strong></span>: Product in Target <br /><br />
+                </div>
+                <div class="col-12 col-lg-3 col-xl-3 col-xxl-2 flex-grow-1 flex-lg-grow-0 flex-shrink-0">
+                    <span><strong>I.B.O</strong></span>: In Back Order <br /><br />
+                </div>
+                <div class="col-12 col-lg-3 col-xl-3 col-xxl-2 flex-grow-1 flex-lg-grow-0 flex-shrink-0">
+                    <span><strong>I.D.O</strong></span>: In Draft Order <br /><br />
+                </div>
+                <div class="col-12 col-lg-3 col-xl-3 col-xxl-2 flex-grow-1 flex-lg-grow-0 flex-shrink-0">
+                    <span><strong>S30</strong></span>: Sale for last 30 days <br /><br />
+                </div>
+                <div class="col-12 col-lg-3 col-xl-3 col-xxl-2 flex-grow-1 flex-lg-grow-0 flex-shrink-0">
+                    <span><strong>S60</strong></span>: Sale for last 60 days <br /><br />
+                </div>
+                <div class="col-12 col-lg-3 col-xl-3 col-xxl-2 flex-grow-1 flex-lg-grow-0 flex-shrink-0">
+                    <span><strong>S90</strong></span>: Sale for last 90 days <br /><br />
+                </div>
+                <div class="col-12 col-lg-3 col-xl-3 col-xxl-2 flex-grow-1 flex-lg-grow-0 flex-shrink-0">
+                    <span><strong>S180</strong></span>: Sale for last 180 days <br /><br />
+                </div>
+                <div class="col-12 col-lg-3 col-xl-3 col-xxl-2 flex-grow-1 flex-lg-grow-0 flex-shrink-0">
+                    <span><strong>S365</strong></span>: Sale for last 365 days <br /><br />
+                </div>
+                <div class="col-12 col-lg-3 col-xl-3 col-xxl-2 flex-grow-1 flex-lg-grow-0 flex-shrink-0">
+                    <span><strong>DSL PO</strong></span>: Number of days since last Purcahse order <br /><br />
+                </div>
+                <div class="col-12 col-lg-3 col-xl-3 col-xxl-2 flex-grow-1 flex-lg-grow-0 flex-shrink-0">
+                    <span><strong>QL PO</strong></span>: Quantity on last Purcahse order <br /><br />
+                </div>
+                <div class="col-12 col-lg-3 col-xl-3 col-xxl-2 flex-grow-1 flex-lg-grow-0 flex-shrink-0">
+                    <span><strong>P. Amount</strong></span>: Purchase Amount <br /><br />
+                </div>
+                <div class="col-12 col-lg-3 col-xl-3 col-xxl-2 flex-grow-1 flex-lg-grow-0 flex-shrink-0">
+                    <span><strong>D.S.L.D</strong></span>: Number of days since last delivery <br /><br />
+                </div>
+                <div class="col-12 col-lg-3 col-xl-3 col-xxl-2 flex-grow-1 flex-lg-grow-0 flex-shrink-0">
+                    <span><strong>D.S.L S.T</strong></span>: Number of days since last stocktake <br /><br />
+                </div>
+                <div class="col-12 col-lg-3 col-xl-3 col-xxl-2 flex-grow-1 flex-lg-grow-0 flex-shrink-0">
+                    <span><strong>S.T OK </strong></span>: Is stocktake OK ? <br /><br />
+                </div>
+                <div class="col-12 col-lg-3 col-xl-3 col-xxl-2 flex-grow-1 flex-lg-grow-0 flex-shrink-0">
+                    <span><strong>S.T difference </strong></span>: Stocktake difference <br /><br />
+                </div>
+                <div class="col-12 col-lg-3 col-xl-3 col-xxl-2 flex-grow-1 flex-lg-grow-0 flex-shrink-0">
+                    <span><strong>Dead Stock </strong></span>: Is dead stock ? <br /><br />
+                </div>
+                <div class="col-12 col-lg-3 col-xl-3 col-xxl-2 flex-grow-1 flex-lg-grow-0 flex-shrink-0">
+                    <span><strong>To delete </strong></span>: Should be deleted ? <br /><br />
+                </div>
+                <div class="col-12 col-lg-3 col-xl-3 col-xxl-2 flex-grow-1 flex-lg-grow-0 flex-shrink-0">
+                    <span><strong>St_I.B.O </strong></span>: Stock + In Back Order <br /><br />
+                </div>
+                <div class="col-12 col-lg-3 col-xl-3 col-xxl-2 flex-grow-1 flex-lg-grow-0 flex-shrink-0">
+                    <span><strong> </strong></span> <br /><br />
+                </div>
+                <div class="col-12 col-lg-3 col-xl-3 col-xxl-2 flex-grow-1 flex-lg-grow-0 flex-shrink-0">
+                    <span><strong> </strong></span> <br /><br />
+                </div>
+
+            </div>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Tree View -->
+    <record id="cw_bonus_period_tracking_tree_view" model="ir.ui.view">
+        <field name="name">cw.bonus.period.tracking.tree</field>
+        <field name="model">cw.bonus.period.tracking</field>
+        <field name="arch" type="xml">
+            <tree default_order="period_start_date desc">
+                <field name="name"/>
+                <field name="period_start_date"/>
+                <field name="period_end_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="cw_bonus_period_tracking_tree_view_search" model="ir.ui.view">
+        <field name="name">cw.bonus.period.tracking.search</field>
+        <field name="model">cw.bonus.period.tracking</field>
+        <field name="arch" type="xml">
+            <search string="Period">
+                <field name="name" string="Search by name" />
+                <field name="period_start_date" string="Search by start date" />
+                <field name="period_end_date" string="Search by  Ending date"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="cw_bonus_period_tracking_form_view" model="ir.ui.view">
+        <field name="name">cw.bonus.period.tracking.form</field>
+        <field name="model">cw.bonus.period.tracking</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="period_start_date"/>
+                        <field name="period_end_date"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action for the Tree View -->
+    <record id="action_cw_bonus_period_tracking_tree" model="ir.actions.act_window">
+        <field name="name">Period Tracking</field>
+        <field name="res_model">cw.bonus.period.tracking</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="cw_bonus_period_tracking_tree_view"/>
+    </record>
+
+    
+
+</odoo>

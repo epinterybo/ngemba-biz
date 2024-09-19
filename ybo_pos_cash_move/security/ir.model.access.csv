@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+admin_ybo_pos_cash_move_pos_cash_report,admin.ybo_pos_cash_move.pos_cash_report,model_ybo_pos_cash_move_pos_cash_report,base.group_user,1,1,1,1
+admin_ybo_pos_cash_move_pos_cash_cheque,admin.ybo_pos_cash_move.pos_cash_cheque,model_ybo_pos_cash_move_pos_cash_cheque,base.group_user,1,1,1,1
+admin_ybo_pos_cash_move_pos_simple_count,admin.ybo_pos_cash_move.pos_simple_count,model_ybo_pos_cash_move_pos_simple_count,base.group_user,1,1,1,1
+admin_ybo_pos_cash_move_pos_simple_count_cheque,admin.ybo_pos_cash_move.pos_simple_count_cheque,model_ybo_pos_cash_move_pos_simple_count_cheque,base.group_user,1,1,1,1

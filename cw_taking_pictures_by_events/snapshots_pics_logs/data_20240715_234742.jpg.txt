@@ -1,0 +1,3 @@
+About to create file data_20240715_234742.jpg related to the model pos.order with record id 15
+An error occurred: HTTPConnectionPool(host='192.168.3.179', port=80): Max retries exceeded with url: /ISAPI/Streaming/channels/1/picture (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x10bab39d0>: Failed to establish a new connection: [Errno 51] Network is unreachable'))
+Handling async callback result failed: can only concatenate str (not "NoneType") to str

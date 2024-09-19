@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<template>
+    <t  t-name="cw_pos_international_card_button.PosIntCardButton" owl="1">
+        <button class="control-button btn btn-light rounded-0 fw-bolder" t-on-click="() =>this.onClick()">
+            <i class="fa fa-credit-card" role="img" title="Foreign"/>
+            Foreign %
+        </button>
+    </t>
+</template>

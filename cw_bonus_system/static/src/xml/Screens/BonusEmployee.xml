@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template id="template" xml:space="preserve">
+    <t t-name="cw_bonus_system.EmployeeBonusScreen">
+        <div class="employee-bonus-screen screen h-100 d-flex flex-column bg-100">
+            <div class="top-content d-flex align-items-center p-2 border-bottom text-center">
+                <div class="top-right-buttons d-flex gap-2 w-100 justify-content-end">
+                    <div class="search-bar-container sb-bonus-employee d-flex align-items-center w-100 w-lg-50 h-100 h-100">
+                        <div class="input-group h-100">
+                            <div class="pos-search-bar form-control d-flex align-items-center bg-view">
+                                <i class="oi oi-search me-2" t-on-click="_onPressEnterKey"/>
+                                <input class="flex-grow-1 w-auto h-100 border-0 p-2 me-4" type="text" autofocus="autofocus" t-ref="search-word-input-bonus-employee" placeholder="Search Employee..." size="1" t-on-keyup="updateBonusEmployeeList" />
+                                <i class="fa fa-times position-absolute end-0 me-2 pe-1 cursor-pointer" t-on-click="_clearSearch"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <section class="overflow-auto">
+                <table class="partner-list table table-striped w-100">
+                    <thead>
+                        <tr>
+                            <th class="py-2">Name</th>
+                            <th class="py-2">Employee Code</th>
+                        </tr>
+                    </thead>
+                    <tbody class="employee-bonus-list-contents">
+                        <t t-foreach="bonus_employees" t-as="bonus_employee" t-key="bonus_employee.id">
+                            <BonusEmployeeLine bonus_employee="bonus_employee"
+                                                selectedBonusEmployee="state.selectedBonusEmployee"
+                                                onClickBonusEmployee.bind="clickBonusEmployee" />
+                        </t>
+                    </tbody>
+                </table>
+                <!--<div t-if="state.query" class="search-more-button d-flex justify-content-center my-2">-->
+                <div class="search-more-button d-flex justify-content-center my-2">
+                    <button class="btn btn-lg btn-primary" t-on-click="_onPressEnterKey">Search Employee(s)</button>
+                </div>
+                <div class="search-more-button d-flex justify-content-center my-2">
+                    <button class="btn btn-lg btn-primary" t-on-click="_closePopUp">Close PopUp</button>
+                </div>
+            </section>
+        </div>
+    </t>
+
+</template>

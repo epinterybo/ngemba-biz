@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem
+        id="menu_root_cw_bonus_system"
+        name="CW Bonus - Commissions system"
+        sequence="10">
+
+        <menuitem
+            id="menu_cw_bonus_periodical_points_parents"
+            name="Employee Bonus"
+            sequence="1">
+
+            <menuitem
+                id="menu_cw_bonus_periodical_points"
+                name="Bonus by Period"
+                action="action_cw_bonus_periodical_points"
+                sequence="1"/>
+            
+            <menuitem
+                id="menu_cw_bonus_points_tracking"
+                name="Points History"
+                action="action_cw_bonus_points_tracking"
+                sequence="1"/>
+
+        </menuitem>
+
+        <menuitem
+            id="menu_cw_bonus_period_tracking"
+            name="Periods"
+            action="action_cw_bonus_period_tracking_tree"
+            sequence="2"/>
+
+        <menuitem
+            id="menu_cw_bonus_employee_bonus"
+            name="Employees"
+            action="action_cw_bonus_employee_bonus"
+            sequence="3"/>
+
+        <menuitem
+            id="menu_cw_bonus_prizes_parent"
+            name="Prizes"
+            sequence="4">
+
+            <menuitem
+                id="menu_cw_bonus_prizes_winners"
+                name="Prize Winners"
+                action="action_cw_bonus_prize_winner"
+                sequence="1"/>
+
+            <menuitem
+                id="menu_cw_bonus_prizes_list"
+                name="Prizes to be won"
+                action="action_cw_bonus_prize_period"
+                sequence="2"/>
+        </menuitem>
+
+
+    </menuitem>
+
+</odoo>

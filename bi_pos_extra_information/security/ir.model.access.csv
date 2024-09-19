@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+bi_pos_extra_information.access_pos_extra_info,access_pos_extra_info,bi_pos_extra_information.model_pos_extra_info,base.group_user,1,1,1,1
+bi_pos_extra_information.access_extra_fields_line,access_extra_fields_line,bi_pos_extra_information.model_extra_fields_line,base.group_user,1,1,1,1
+

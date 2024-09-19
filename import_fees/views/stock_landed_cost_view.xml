@@ -1,0 +1,151 @@
+<odoo>
+    <data>
+        <!-- explicit list view definition -->
+        <record model="ir.ui.view" id="import_fees.stock_landed_cost_form">
+            <field name="name">stock.form</field>
+            <field name="model">stock.landed.cost</field>
+            <field name="inherit_id" ref="stock_landed_costs.view_stock_landed_cost_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//header/button[2]" position="after">
+                    <button name="button_create_shipping_bill" string="Create Shipping Bill" type="object"  invisible="not create_shipping_bill"/>
+                    <button name="button_create_customs_bill" string="Create Customs Bill" type="object"  invisible="not create_customs_bill"/>
+                </xpath>
+                <field name="picking_ids" position="attributes">
+                    <attribute name="required">True</attribute>
+                </field>
+                <field name="vendor_bill_id" position="attributes">
+                    <attribute name="required">True</attribute>
+                </field>
+                <xpath expr="//notebook" position="before">
+                    <group>
+                        <field name="received_products_ids" string="Received products">
+                            <tree>
+                                <field name="product_id" widget="section_and_note_text" />
+                                <field name="hs_code_id" widget="many2one"/>
+                                <field name="quantity"/>
+                                <field name="currency_id" optional="hide"/>
+                                <field name="local_currency_id" optional="hide"/>
+                                <field name="price_unit" widget="monetary"/>
+                                <field name="price_total" widget="monetary"/>
+                                <field name="local_price_total" widget="monetary" optional="hide"/>
+                            </tree>
+                        </field>
+                    </group>
+                </xpath>
+                <xpath expr="//page[@name='additional_costs']" position="before">
+                    <page string="Landed Costs" name="frais_approche">
+                        <group string="Document" col="8">
+                            <field name="bill_currency_id"/>
+                            <field name="amount_foreign_currency" widget="monetary"/>
+                            <field name="currency_rate"/>
+                            <field name="amount_local_currency" widget="monetary"/>
+                            <field name="create_customs_bill" invisible="True"/>
+                            <field name="create_shipping_bill" invisible="True"/>
+                        </group>
+                        <group string="Charges">
+                            <group>
+                                <field name="stevedoring" widget="monetary"/>
+                                <field name="demurrage" widget="monetary"/>
+                                <field name="transport" widget="monetary"/>
+                                <field name="storage" widget="monetary"/>
+                                <field name="bank" widget="monetary"/>
+                                <field name="miscellaneous" widget="monetary"/>
+                                <field name="royalty_fee" widget="monetary"/>
+                            </group>
+                            <group>
+                                <group col="2">
+                                    <field name="freight" widget="monetary"/>
+                                    <field name="insurance" widget="monetary"/>
+                                </group>
+                                <group col="4" colspan="2" class="transport_cfr_locale">
+                                    <field name="transport_cfr_foreign_currency" widget="monetary"/>
+                                    <field name="transport_cfr_local_currency" widget="monetary"/>
+                                </group>
+                                <group col="2">
+                                    <field name="clearance" widget="monetary"/>
+                                    <field name="transit" widget="monetary"/>
+                                    <field name="shipping" widget="monetary"/>
+                                    <field name="other" widget="monetary"/>
+                                    <field name="royalty_fee_info" widget="monetary"/>
+                                </group>
+                            </group>
+                        </group>
+                        <group string="Tariffs">
+                            <group>
+                                <label for="declared_value" string="Declared Value"/>
+                                <div>
+                                    <field name="declared_value" class="oe_inline" widget="monetary"/>
+                                    <button style="margin-left:1em;" name="open_customs_fees_popup" type="object"
+                                            icon="fa-pie-chart" target="new" title="Detail"/>
+                                    <button style="margin-left:1em;" name="calc_customs_fees_and_open"  string="Calculate Tariffs" type="object"
+                                            target="new"/>
+                                </div>
+                            </group>
+                            <group>
+                                <field name="customs_value" widget="monetary"/>
+                                <field name="customs_vat_value" widget="monetary"/>
+                                <field name="total_customs_value" widget="monetary"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+                <xpath expr="//page[@name='valuation_adjustments']" position="attributes">
+                        <attribute name="string">Cost breakdown</attribute>
+                </xpath>
+                <xpath expr="//page[@name='additional_costs']" position="attributes">
+                        <attribute name="string">Summary</attribute>
+                </xpath>
+                <xpath expr="//page[@name='valuation_adjustments']/field[1]/tree[1]/field[@name='quantity']" position="before">
+                    <field name="cost_line_product_id"/>
+                </xpath>
+                <xpath expr="//page[@name='valuation_adjustments']/field[1]/tree[1]/field[@name='cost_line_id']" position="attributes">
+                        <attribute name="optional">hidden</attribute>
+                </xpath>
+                <xpath expr="//page[@name='valuation_adjustments']/field[1]/tree[1]/field[@name='former_cost']" position="attributes">
+                        <attribute name="optional">hidden</attribute>
+                </xpath>
+                <xpath expr="//page[@name='valuation_adjustments']/field[1]/tree[1]/field[@name='final_cost']" position="attributes">
+                        <attribute name="optional">hidden</attribute>
+                </xpath>
+
+            </field>
+        </record>
+
+
+        <!-- explicit list view definition -->
+        <record model="ir.ui.view" id="import_fees.stock_landed_cost_tree">
+            <field name="name">stock.landed.cost.tree</field>
+            <field name="model">stock.landed.cost</field>
+            <field name="inherit_id" ref="stock_landed_costs.view_stock_landed_cost_tree"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after" invisible="not show_importfees">
+                    <field name="bill_currency_id"/>
+                    <field name="regime_select"  optional="hide"/>
+                    <field name="amount_foreign_currency" widget="monetary"/>
+                    <field name="currency_rate"/>
+                    <field name="amount_local_currency" widget="monetary"/>
+                    <field name="stevedoring" widget="monetary" optional="hide"/>
+                    <field name="demurrage" widget="monetary" optional="hide"/>
+                    <field name="transport" widget="monetary"  optional="hide"/>
+                    <field name="storage" widget="monetary" optional="hide"/>
+                    <field name="bank" widget="monetary" optional="hide"/>
+                    <field name="miscellaneous" widget="monetary" optional="hide"/>
+                    <field name="royalty_fee" widget="monetary" optional="hide"/>
+                    <field name="freight" widget="monetary" optional="hide"/>
+                    <field name="clearance" widget="monetary" optional="hide"/>
+                    <field name="transit" widget="monetary"  optional="hide"/>
+                    <field name="transport_cfr_foreign_currency" widget="monetary" optional="hide" />
+                    <field name="transport_cfr_local_currency" widget="monetary" optional="hide"/>
+                    <field name="insurance" widget="monetary" optional="hide"/>
+                    <field name="shipping" widget="monetary" optional="hide"/>
+                    <field name="other" widget="monetary" optional="hide"/>
+                    <field name="royalty_fee_info" widget="monetary" optional="hide"/>
+                    <field name="declared_value" widget="monetary" />
+                    <field name="customs_value" widget="monetary"/>
+                </field>
+            </field>
+        </record>
+
+
+    </data>
+</odoo>

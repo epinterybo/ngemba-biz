@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="custom_bi_pos_extra_information_form_view">
+        <field name="name">res.config.setting.form.take.away.management.view</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="point_of_sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='pos_interface_section']" position="inside">
+                <div class="col-12 col-lg-6 o_setting_box">
+                    <div class="o_setting_left_pane">
+                        <field name="pos_allow_extra_info" string="Enable Extra Info"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="pos_allow_extra_info" string="Enable Extra Info"/>
+                        <div class="text-muted">
+                            Enable this for Extra Info Your Order.
+                        </div>
+                        <div class="content-group mt16" invisible = "pos_allow_extra_info == False">
+                            <span class="o_form_label">
+                                Select your extra fields here
+                            </span><br/>
+                            <field name="pos_extra_info_ids" widget="many2many_tags" style="margin-top: 5px;"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-6 o_setting_box" invisible = "pos_allow_extra_info == False">
+                    <div class="o_setting_left_pane">
+                        <field name="pos_allow_info_show_receipt" string="Extra Information On Receipt"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="pos_allow_info_show_receipt" string="Extra Information On Receipt"/>
+                        <div class="text-muted">
+                            Enable To Show Extra Information On Receipt.
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

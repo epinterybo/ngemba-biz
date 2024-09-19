@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem
+        id="menu_root_cw_taking_pictures_by_events"
+        name="CW Position - Cameras Config"
+        sequence="10">
+
+        <menuitem
+            id="menu__cw_taking_pictures_by_events"
+            name="Positions Cameras Config"
+            sequence="10"
+            action="action_cw_taking_positions_cameras"
+            />
+        
+    </menuitem>
+
+</odoo>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Tree View -->
+        <record id="cw_costing_exchange_month_tree_view" model="ir.ui.view">
+            <field name="name">cw.costing.exchange.month.tree</field>
+            <field name="model">cw.costing.exchange.month</field>
+            <field name="arch" type="xml">
+                <tree default_order="created_date desc" create="False" edit="False" import="False" editable="bottom" >
+                    <field name="name" />
+                    <field name="period_start_date"  />
+                    <field name="period_end_date" />
+                </tree>
+            </field>
+        </record>
+
+        <!-- Search View -->
+        <record id="cw_costing_exchange_month_view_search" model="ir.ui.view">
+            <field name="name">cw.costing.exchange.month.search</field>
+            <field name="model">cw.costing.exchange.month</field>
+            <field name="arch" type="xml">
+                <search string="Period">
+                    <field name="name" string="Search by Year-month" />
+                    <!-- Specify default filter criteria for period_bonus_id -->
+                    <!--<filter name="default_period_id" string="Default Period" domain="[('period_bonus_id', '=', '2')]"/>-->
+                    <separator/>
+                    <!--<filter name="current_period" string="Current Period"  domain="[('period_bonus_id.id', '=', context.get('parameter_name'))]"/>-->
+                    <filter name="current_period" string="Current Period"  domain="[('name', 'ilike', context.get('current_period_str'))]"/>
+                </search>
+            </field>
+        </record>
+
+
+
+        <!-- Form View -->
+        <record id="cw_costing_exchange_month_form_view" model="ir.ui.view">
+            <field name="name">cw.costing.exchange.month.form</field>
+            <field name="model">cw.costing.exchange.month</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="period_start_date"  />
+                            <field name="period_end_date" />
+                        </group>
+                        <group name="exchange_rate" string="Exchange Rate">
+                            <field name="exchange_rate_line_ids" string="Exchange Rate">
+                                <tree create="True" edit="True" import="False" editable="bottom">
+                                    <field name="currency_from_id"/>
+                                    <field name="currency_to_id"/>
+                                    <field name="month_rate"/>
+                                    <field name="last_modified_id"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action for the Tree View -->
+        <record id="action_cw_costing_exchange_month" model="ir.actions.act_window">
+            <field name="name">Exchange Rate View</field>
+            <field name="res_model">cw.costing.exchange.month</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_current_period': 1, 'current_period_str': context_today().strftime('%Y-%m')}</field>
+            <field name="view_id" ref="cw_costing_exchange_month_tree_view"/>
+        </record>
+
+    </data>
+
+</odoo>

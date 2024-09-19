@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <!-- product.template form view -->
+    <record id="cw_costing_purchase_form_view" model="ir.ui.view">
+        <field name="name">cw_costing.purchase.order.form</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='currency_id']" position="after">
+                    <!--<field name="x_cw_costing_grouping_id" string="Grouping Ref" domain="[('state', '!=', 'done')]"/>-->
+                    <field name="x_shipment_id" string="Shipment Id" readonly="True" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="cw_costing_purchase_search_view" model="ir.ui.view">
+        <field name="name">cw_costing.purchase.order.form</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.view_purchase_order_filter" />
+        <field name="arch" type="xml">
+            <!--<filter name="categ_id" position="after">-->
+            <xpath expr="//filter[@name='order_date']" position="after">
+                <filter string="Shipping ID" name="shipping_id" domain="[]" context="{'group_by': 'x_shipment_id'}"/>
+            </xpath>
+            <!--</filter>-->
+        </field>
+    </record>
+
+    <record id="cw_costing_purchase_tree_view" model="ir.ui.view">
+        <field name="name">cw_costing.purchase.order.tree</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_kpis_tree"></field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="x_shipment_id" string="Shipping ID"></field>
+            </xpath>
+        </field>
+    </record>
+
+
+</odoo>

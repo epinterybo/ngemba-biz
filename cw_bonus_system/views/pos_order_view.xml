@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_order_bonus_employee" model="ir.ui.view">
+        <field name="name">pos.order.bonus.employee</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='notes']" position="after" readonly="1">
+                <page string="POS Employee Referral">
+                    <field name="bonus_employee_id" widget="many2one" />
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

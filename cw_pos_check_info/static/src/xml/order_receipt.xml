@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="cw_pos_check_info.OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension"
+       owl="1">
+        <xpath expr="//div[hasclass('paymentlines')]/span[hasclass('pos-receipt-right-align')]" position="after">
+        <t t-if="line.check_number and line.check_number != 'false'">
+                <div class="checkNO">
+                    <b><i>
+                        Check Number : <t t-esc="line.check_number"/>
+                    </i></b>
+                    </div>
+                </t>
+        </xpath>
+        </t>
+        </templates>

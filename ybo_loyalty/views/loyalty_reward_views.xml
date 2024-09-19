@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_loyalty_reward_form_inherit" model="ir.ui.view">
+        <field name="name">loyalty.reward.form.inherit</field>
+        <field name="model">loyalty.reward</field>
+        <field name="inherit_id" ref="loyalty.loyalty_reward_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@class='o_row'][1]" position="after">
+                <label for="allowed_total_points" string="Minimum allowed total points"/>
+                <div class="o_row">
+                    <field name="allowed_total_points" string="Minimum allowed total points" class="oe_edit_only col-2 oe_inline pe-2"/>
+<!--                    <field name="point_name" no_label="1"/>-->
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

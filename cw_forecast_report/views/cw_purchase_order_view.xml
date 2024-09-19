@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="cw_old_purchase_order_tree_view" model="ir.ui.view">
+        <field name="name">cw.old.purchase.order.tree</field>
+        <field name="model">cw.old.purchase.order</field>
+        <field name="arch" type="xml">
+            <tree string="Purchases orders" multi_edit="1" edit="True" import="True" default_order="x_cw_po_date,x_cw_purchase_order_ref_number desc" limit="80" create="True">
+                <field name="x_cw_purchase_order_ref_number"></field>
+                <field name="x_cw_total_price"></field>
+                <field name="x_cw_currency_identifier"></field>
+                <field name="x_cw_po_date"></field>
+                <field name="x_cw_po_provider_list_id"></field>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="cw_old_purchase_order_tree_view_search" model="ir.ui.view">
+        <field name="name">cw.old.purchase.order.search</field>
+        <field name="model">cw.old.purchase.order</field>
+        <field name="arch" type="xml">
+            <search string="Product">
+                <field name="x_cw_purchase_order_ref_number" string="Search by PO Ref Number" />
+                <field name="x_cw_po_provider_list_id" string="Search by Provider list id" />
+                <field name="x_cw_old_partner_id" string="Search by contact name" />
+            </search>
+        </field>
+    </record>
+
+
+    <record id="action_launch_cw_old_purchase_order" model="ir.actions.act_window">
+        <field name="name">CW Old PO </field>
+        <field name="res_model">cw.old.purchase.order</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="cw_forecast_report.cw_old_purchase_order_tree_view"></field>
+        <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face" >
+                    View CW Old P.O.
+                </p>
+        </field>
+    </record>
+
+
+</odoo>

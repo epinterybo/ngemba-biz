@@ -1,0 +1,15 @@
+.check_info {
+  width: 90% !important;
+  margin: 0 16px !important;
+
+  small {
+    font-size: 12px;
+  }
+
+  .truncate-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis !important;
+    max-width: 200px !important;
+  }
+}

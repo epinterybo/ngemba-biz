@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Tree View -->
+    <record id="cw_bonus_prize_period_tree_view" model="ir.ui.view">
+        <field name="name">cw.bonus.prize.period.tree</field>
+        <field name="model">cw.bonus.prize.period</field>
+        <field name="arch" type="xml">
+            <tree default_order="created_date desc, for_rank asc">
+                <field name="name"/>
+                <field name="for_rank" />
+                <field name="period_bonus_id" widget="many2one" />
+                <field name="created_date" />
+                <field name="added_by" />
+            </tree>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="cw_bonus_prize_period_tree_view_search" model="ir.ui.view">
+        <field name="name">cw.bonus.prize.period.search</field>
+        <field name="model">cw.bonus.prize.period</field>
+        <field name="arch" type="xml">
+            <search string="Period">
+                <field name="name" string="Search by name" />
+                <field name="period_bonus_id" string="Search by Period" />
+                <field name="added_by" string="Search by created by"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="cw_bonus_prize_period_form_view" model="ir.ui.view">
+        <field name="name">cw.bonus.prize.period.form</field>
+        <field name="model">cw.bonus.prize.period</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <field name="image_prize" widget="image" nolabel="1" class="image-field" />
+                    <group>
+                        <field name="name"/>
+                        <field name="period_bonus_id"  />
+                        <field name="for_rank" widget="integer"  />
+                        <field name="description"  />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action for the Tree View -->
+    <record id="action_cw_bonus_prize_period" model="ir.actions.act_window">
+        <field name="name">Prizes List</field>
+        <field name="res_model">cw.bonus.prize.period</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="cw_bonus_prize_period_tree_view"/>
+    </record>
+
+    
+
+</odoo>

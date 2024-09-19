@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="cw_old_partner_tree_view" model="ir.ui.view">
+        <field name="name">cw.old.partner.tree</field>
+        <field name="model">cw.old.partner</field>
+        <field name="arch" type="xml">
+            <tree string="OCM Partner" multi_edit="1" edit="True" import="True" default_order="name,x_cw_list_id asc" limit="80" create="True">
+                <field name="name"></field>
+                <field name="x_cw_list_id"></field>
+                <field name="is_seller"></field>
+                <field name="description"></field>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="cw_old_partner_tree_view_search" model="ir.ui.view">
+        <field name="name">cw.old.partner.search</field>
+        <field name="model">cw.old.partner</field>
+        <field name="arch" type="xml">
+            <search string="Product">
+                <field name="name" string="Search by Product Name" />
+                <field name="x_cw_list_id" string="List Id"/>
+                <separator/>
+                <filter name="is_seller" string="Is Seller" domain="[('is_seller', '=', True)]"/>
+                <filter name="is_seller" string="Only Customers" domain="[('is_seller', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+
+    <record id="action_launch_cw_old_partner" model="ir.actions.act_window">
+        <field name="name">CW Old Partners</field>
+        <field name="res_model">cw.old.partner</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="cw_forecast_report.cw_old_partner_tree_view"></field>
+        <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face" >
+                    View CW Old partners
+                </p>
+        </field>
+    </record>
+
+
+
+</odoo>

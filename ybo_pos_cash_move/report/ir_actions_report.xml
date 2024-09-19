@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+   <record id="action_report_ybo_pos_cash_move" model="ir.actions.report">
+       <field name="name">Bank Report</field>
+       <field name="model">ybo_pos_cash_move.pos_cash_report</field>
+       <field name="report_type">qweb-pdf</field>
+       <field name="report_name">ybo_pos_cash_move.report_pos_cash_move</field>
+       <field name="report_file">ybo_pos_cash_move.report_pos_cash_move</field>
+       <field name="print_report_name">'Bank Cash move Report - %s' % (object.count_type)</field>
+       <field name="binding_model_id" ref="model_ybo_pos_cash_move_pos_cash_report"/>
+       <field name="binding_type">report</field>
+   </record>
+</odoo>

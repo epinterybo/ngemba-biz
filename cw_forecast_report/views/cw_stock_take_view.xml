@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="cw_old_stock_take_tree_view" model="ir.ui.view">
+        <field name="name">cw.old.stock.take.tree</field>
+        <field name="model">cw.old.stock.take</field>
+        <field name="arch" type="xml">
+            <tree string="Purchases orders" multi_edit="1" edit="True" import="True" default_order="x_cw_stock_take_date,x_cw_product_list_id desc" limit="80" create="True">
+                <field name="x_cw_product_list_id"></field>
+                <field name="x_cw_stock_counted_quantity"></field>
+                <field name="x_cw_stock_expected_quantity"></field>
+                <field name="x_cw_stock_take_difference"></field>
+                <field name="x_cw_stock_take_ok"></field>
+                <field name="x_cw_stock_take_date"></field>
+                <field name="product_id"></field>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="cw_old_stock_taketree_view_search" model="ir.ui.view">
+        <field name="name">cw.old.stock.take.search</field>
+        <field name="model">cw.old.stock.take</field>
+        <field name="arch" type="xml">
+            <search string="Stock Take">
+                <field name="x_cw_product_list_id" string="Search by product ListID" />
+                <field name="product_id" string="Search by Product name" />
+            </search>
+        </field>
+    </record>
+
+
+    <record id="action_launch_cw_old_stock_take" model="ir.actions.act_window">
+        <field name="name">CW Old Stock Take </field>
+        <field name="res_model">cw.old.stock.take</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="cw_forecast_report.cw_old_stock_take_tree_view"></field>
+        <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face" >
+                    View CW Old Stock Take
+                </p>
+        </field>
+    </record>
+
+
+</odoo>

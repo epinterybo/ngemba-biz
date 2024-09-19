@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="pos_take_away_template" inherit_id="point_of_sale.template" xml:space="preserve">
+	<t t-name="OrderReceipt1" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension" owl="1">
+
+		<xpath expr="//div[hasclass('pos-receipt-taxes')]" position="after" style="padding-bottom:1px">
+            <style>
+                table {
+<!--                  font-family: arial, sans-serif;-->
+                  border-collapse: collapse;
+                  width: 100%;
+                  padding-top:25px;
+                }
+
+                td, th {
+                  border: 1px solid;
+                  text-align: left;
+                  padding: 8px;
+                }
+
+<!--                tr:nth-child(even) {-->
+<!--                  background-color: #dddddd;-->
+<!--                }-->
+            </style>
+            <t t-if="props.data.extra_info">
+            <t t-if="env.services.pos.config.allow_extra_info">
+                <t t-if="env.services.pos.config.allow_info_show_receipt">
+                    <t t-if="env.services.pos.get_order().get_extra_info_data().length > 0">
+                        <table>
+                            <th>
+                                <div style="text-align:center;"> Extra Information </div>
+                            </th>
+                            <t>
+                                <tr t-foreach="env.services.pos.get_order().get_extra_info_data()" t-as="line" t-key="line_index">
+                                    <t t-foreach="env.services.pos.pos_extra_fields" t-as="field_data_backend" t-key="field_data_backend.id">
+                                        <t t-foreach="line" t-as="key_data" t-key="key_data_index" >
+                                            <td t-if="key_data == field_data_backend.id">
+                                                <div>
+                                                    <t t-if="line[key_data]">
+                                                        <t t-esc="field_data_backend.field_name"/>
+                                                        <span class="pos-receipt-right-align" t-esc="line[key_data]" />
+                                                    </t>
+                                                </div>
+                                            </td>
+                                        </t>
+                                    </t>
+                                </tr>
+                            </t>
+                        </table>
+                    </t>
+                </t>
+            </t>
+            </t>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,7 @@
+/* static/src/css/custom_styles.css */
+/*.o_list_view img, */
+.custom-image-class img {
+    max-height: 150px;
+    height: auto;
+    width: auto;
+}

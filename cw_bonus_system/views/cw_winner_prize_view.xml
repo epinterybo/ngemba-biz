@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Tree View -->
+    <record id="cw_bonus_prize_winner_tree_view" model="ir.ui.view">
+        <field name="name">cw.bonus.prize.winner.tree</field>
+        <field name="model">cw.bonus.prize.winner</field>
+        <field name="arch" type="xml">
+            <tree default_order="prize_period_id desc, rank asc" create="False" edit="False">
+                <field name="name"/>
+                <field name="employee_bonus_id" widget="many2one" />
+                <field name="rank" />
+                <field name="prize_period_id" widget="many2one" />
+                <field name="period_id" widget="many2one" />
+            </tree>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="cw_bonus_prize_winner_tree_view_search" model="ir.ui.view">
+        <field name="name">cw.bonus.prize.winner.search</field>
+        <field name="model">cw.bonus.prize.winner</field>
+        <field name="arch" type="xml">
+            <search string="Period">
+                <field name="name" string="Search by name" />
+                <field name="employee_bonus_id" string="Search by Period" />
+                <field name="rank" string="Search by rank"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="cw_bonus_prize_winner_form_view" model="ir.ui.view">
+        <field name="name">cw.bonus.prize.winner.form</field>
+        <field name="model">cw.bonus.prize.winner</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="prize_period_id"  />
+                        <field name="employee_bonus_id"  />
+                        <field name="rank" widget="integer"  />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action for the Tree View -->
+    <record id="action_cw_bonus_prize_winner" model="ir.actions.act_window">
+        <field name="name">Prize Winners</field>
+        <field name="res_model">cw.bonus.prize.winner</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="cw_bonus_prize_winner_tree_view"/>
+    </record>
+
+    
+
+</odoo>

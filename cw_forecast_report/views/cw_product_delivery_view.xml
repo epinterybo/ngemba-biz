@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="cw_old_product_delivery_tree_view" model="ir.ui.view">
+        <field name="name">cw.old.product.delivery.tree</field>
+        <field name="model">cw.old.product.delivery</field>
+        <field name="arch" type="xml">
+            <tree string="Sale Invoice" multi_edit="1" edit="True" import="True" default_order="x_cw_received_date,x_cw_po_ref_number desc" limit="80" create="True">
+                <field name="x_cw_po_ref_number"></field>
+                <field name="x_cw_product_list_id"></field>
+                <field name="x_cw_quantity_received"></field>
+                <field name="x_cw_received_date"></field>
+                <field name="product_id"></field>
+                <field name="x_cw_old_purchase_order_id"></field>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="cw_old_product_delivery_tree_view_search" model="ir.ui.view">
+        <field name="name">cw.old.product.delivery.search</field>
+        <field name="model">cw.old.product.delivery</field>
+        <field name="arch" type="xml">
+            <search string="Delivery">
+                <field name="x_cw_po_ref_number" string="Search by PO Ref Number" />
+                <field name="x_cw_product_list_id" string="Search by Product List ID" />
+                <field name="product_id" string="Search by Product List ID" filter_domain="['|', '|', '|', ('product_id.default_code', 'ilike', self), ('product_id.product_variant_ids.default_code', 'ilike', self),('product_id.name', 'ilike', self), ('product_id.barcode', 'ilike', self)]" />
+                <separator/>
+                <filter name="x_cw_quantity_remaining" string="Fully delivered" domain="[('x_cw_quantity_remaining', '=', '0')]"/>
+                <group expand="1" string="Group By">
+                    <filter name="x_cw_po_ref_number" string="P0 Ref Number"  context="{'group_by': 'x_cw_po_ref_number'}" />
+                    <filter name="x_cw_product_list_id" string="Product List ID"  context="{'group_by': 'x_cw_product_list_id'}" />
+                    <filter name="product_id" string="Product"  context="{'group_by': 'product_id'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+
+
+    <record id="action_launch_cw_old_product_delivery" model="ir.actions.act_window">
+        <field name="name">CW Old Products Delivery</field>
+        <field name="res_model">cw.old.product.delivery</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="cw_forecast_report.cw_old_product_delivery_tree_view"></field>
+        <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face" >
+                    View CW Products Delivery
+                </p>
+        </field>
+    </record>
+</odoo>

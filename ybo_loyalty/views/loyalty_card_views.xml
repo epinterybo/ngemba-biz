@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="loyalty_card_view_form_inherit" model="ir.ui.view">
+        <field name="name">loyalty.card.view.form.inherit</field>
+        <field name="model">loyalty.card</field>
+        <field name="inherit_id" ref="loyalty.loyalty_card_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='points']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+            <xpath expr="//span[@class='d-inline-block']" position="after">
+                <field name="total_points" readonly="1"/>
+            </xpath>
+            <xpath expr="//span[@class='d-inline-block']" position="after">
+                <field name="state" readonly="1"/>
+            </xpath>
+            <xpath expr="//sheet" position="inside">
+                <notebook>
+                    <page string="Claimed Rewards" name="claimed_rewards">
+                        <field name="reward_ids">
+                            <tree create="false">
+                                <field name="reward_id"/>
+                                <field name="quantity_redeemed"/>
+                                <field name="claim_date"/>
+                                <field name="sale_order_id"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="loyalty_card_view_tree_inherited" model="ir.ui.view">
+        <field name="name">loyalty.card.view.tree.inherited</field>
+        <field name="model">loyalty.card</field>
+        <field name="inherit_id" ref="loyalty.loyalty_card_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="state"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

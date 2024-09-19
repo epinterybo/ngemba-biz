@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Tree View -->
+        <record id="cw_costing_costing_grouping_po_tree_view" model="ir.ui.view">
+            <field name="name">cw.costing.grouping.po.tree</field>
+            <field name="model">cw.costing.grouping.po</field>
+            <field name="arch" type="xml">
+                <tree default_order="created_at desc" create="True" edit="False" import="False" editable="bottom" >
+                    <field name="name" />
+                    <field name="tracking_grouping_order" />
+                    <field name="updated_tracking_date" />
+                    <field name="is_costing_completed" />
+                    <field name="modified_by_id" />
+                </tree>
+            </field>
+        </record>
+
+        <!-- Search View -->
+        <record id="cw_costing_costing_grouping_po_view_search" model="ir.ui.view">
+            <field name="name">cw.costing.grouping.po.search</field>
+            <field name="model">cw.costing.grouping.po</field>
+            <field name="arch" type="xml">
+                <search string="Period">
+                    <field name="name" string="Search by Po name" />
+                    <separator/>
+                    <filter name="not_completed_costing_group" string="Not completed"  domain="[('name', '=', False)]"/>
+                    <filter name="completed_costing_group" string="completed"  domain="[('name', '=', True)]"/>
+                </search>
+            </field>
+        </record>
+
+
+
+        <!-- Form View -->
+        <record id="cw_costing_costing_grouping_po_form_view" model="ir.ui.view">
+            <field name="name">cw.costing.grouping.po.form</field>
+            <field name="model">cw.costing.grouping.po</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="action_done" type="object" class="oe_highlight" string="Mark as Done"  invisible="can_activate_is_completed == False"/>
+                        <button name="action_cancel" type="object" class="oe_highlight" string="Cancel"  invisible="state != 'done'"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,done"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="x_shipment_id" options="{'no_create_edit': True}"  readonly="is_costing_completed ==  True" context="{'search_default_order': 'create_date desc'}" />
+                            <!--<field name="purchase_order_ids"  widget="many2many_tags" options="{'no_create_edit': True}"  readonly="is_costing_completed ==  True"  domain="[('x_cw_costing_grouping_id', '=', False)]" />-->
+                            <field name="purchase_order_ids"  widget="many2many_tags"  readonly="True"/>
+                            <!--<field name="freight_cost_currency_id" readonly="is_costing_completed ==  True" />-->
+                            <field name="freight_cost_amount" readonly="is_costing_completed ==  True"  />
+                            <field name="tracking_grouping_order" readonly="is_costing_completed ==  True" invisible="True"/>
+                            <field name="updated_tracking_date" readonly="True" />
+                            <field name="can_activate_is_completed" readonly="True" invisible="True" />
+                            <field name="is_costing_completed" readonly="is_costing_completed ==  True"  widget="boolean_toggle" invisible="True"  />
+                        </group>
+                        <div class="update-costing" invisible="is_costing_completed ==  True">
+                            <button name="create_from_view" string="Create and Import PO Lines" type="object" class="btn-primary" invisible="id != False" />
+                            <button name="update_from_view" string="Update and Estimate" type="object" class="btn-primary" invisible="id == False" />
+                        </div>
+                        <group name="grouping_po_coston" string="Costing Line">
+                            <field name="cw_costing_grouping_po_line_ids" string="PO Costing Line">
+                                <tree create="False" edit="True" import="False" editable="top" delete="false" >
+                                    <field name="purchase_order_id" readonly="True"/>
+                                    <field name="product_id" readonly="True" widget="many2one"/>
+                                    <field name="quantity" readonly="True"/>
+                                    <field name="unit_price" readonly="True" />
+                                    <field name="total_price" readonly="True" />
+                                    <field name="currency_id" readonly="True"/>
+                                    <field name="freight_share_amount" readonly="is_costing_completed ==  True" />
+                                    <field name="is_freight_cost_adjusted" readonly="is_costing_completed ==  True" widget="boolean_toggle"/>
+                                    <field name="harmonized_code_id" readonly="is_costing_completed ==  True" optional="hide" />
+                                    <field name="duty" readonly="is_costing_completed ==  True" widget="percentage"/>
+                                    <field name="warranty" readonly="is_costing_completed ==  True" widget="percentage"/>
+                                    <field name="hs_vat" readonly="is_costing_completed ==  True" widget="percentage" optional="hide"/>
+                                    <field name="landed_cost" readonly="True" />
+                                    <field name="profit" readonly="is_costing_completed ==  True" widget="percentage" />
+                                    <field name="price_excluded_vat" readonly="is_costing_completed ==  True" />
+                                    <field name="price_include_vat" readonly="is_costing_completed ==  True"  />
+                                    <field name="conversion_rate" readonly="is_costing_completed ==  True"  />
+                                    <button name="unlink" icon="gtk-cancel" type="object" string="Delete" invisible="True" />
+                                    <field name="is_costing_completed" invisible="True" optional="hide"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action for the Tree View -->
+        <record id="action_cw_costing_costing_grouping_po" model="ir.actions.act_window">
+            <field name="name">Costing Group</field>
+            <field name="res_model">cw.costing.grouping.po</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="cw_costing_costing_grouping_po_tree_view"/>
+        </record>
+
+    </data>
+
+</odoo>

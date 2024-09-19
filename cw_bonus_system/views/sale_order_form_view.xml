@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="record_name" model="ir.ui.view">
+        <field name="name">cw_bonus_system.sale.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"></field>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='order_details']" position="after">
+                <group name="cw_customization_sale">
+                    <field name="employee_bonus_id" widget="many2one" options='{"no_create": true}' />
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

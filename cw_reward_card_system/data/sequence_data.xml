@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="seq_reward_card" model="ir.sequence">
+        <field name="name">CW Reward Card</field>
+        <field name="code">cw.reward.card</field>
+        <field name="prefix">RC</field>
+        <field name="padding">7</field>
+    </record>
+</odoo>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_cron_create_period_tracking_record" model="ir.cron">
+        <field name="name">Create CW Bonus Period Tracking Record</field>
+        <field name="model_id" ref="model_cw_bonus_period_tracking"/>
+        <field name="state">code</field>
+        <field name="code">model.create_period_tracking_record()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="nextcall" eval="(DateTime.now().replace(hour=2, minute=0) + timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')" />
+        <field name="doall" eval="False"/>
+        <field name="active" eval="True"/>
+    </record>
+
+<!--
+    <record id="ir_cron_account_move_send" model="ir.cron">
+        <field name="name">Send invoices automatically</field>
+        <field name="model_id" ref="model_account_move"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_account_move_send(job_count=20)</field>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+    </record>
+    -->
+
+</odoo>

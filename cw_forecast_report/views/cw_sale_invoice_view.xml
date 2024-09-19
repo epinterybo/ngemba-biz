@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="cw_old_sale_invoice_tree_view" model="ir.ui.view">
+        <field name="name">cw.old.sale.invoice.tree</field>
+        <field name="model">cw.old.sale.invoice</field>
+        <field name="arch" type="xml">
+            <tree string="Sale Invoice" multi_edit="1" edit="True" import="True" default_order="x_cw_order_date,x_cw_invoice_ref_number desc" limit="80" create="True">
+                <field name="x_cw_invoice_ref_number"></field>
+                <field name="x_cw_total_price"></field>
+                <field name="x_cw_order_date"></field>
+                <field name="x_cw_order_customer_list_id"></field>
+                <field name="x_cw_customer_id"></field>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="cw_old_sale_invoice_tree_view_search" model="ir.ui.view">
+        <field name="name">cw.old.sale.invoice.search</field>
+        <field name="model">cw.old.sale.invoice</field>
+        <field name="arch" type="xml">
+            <search string="Product">
+                <field name="x_cw_invoice_ref_number" string="Search by PO Ref Number" />
+                <field name="x_cw_order_customer_list_id" string="Search by customer listID" />
+                <field name="x_cw_customer_id" string="Search by contact name" />
+            </search>
+        </field>
+    </record>
+
+
+
+    <record id="action_launch_cw_old_sale_invoice" model="ir.actions.act_window">
+        <field name="name">CW Old Sale Invoices</field>
+        <field name="res_model">cw.old.sale.invoice</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="cw_forecast_report.cw_old_sale_invoice_tree_view"></field>
+        <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face" >
+                    View CW Old Sale Invoice
+                </p>
+        </field>
+    </record>
+</odoo>

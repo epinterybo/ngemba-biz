@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template id="template" xml:space="preserve">
+    <t t-name="cw_bonus_system.BonusEmployeeLine">
+        <tr t-attf-class="bonus-employee-line gap-2 gap-lg-0 align-top {{highlight}}" t-att-data-id="props.bonus_employee.id"
+            t-on-click="() => this.props.onClickBonusEmployee(props.bonus_employee)">
+            <td>
+                <div class="company-field text-bg-muted">
+                    <t t-esc="props.bonus_employee.name or ''" />
+                </div>
+                <button t-if="_isBonusEmployeeSelected" class="unselect-tag d-lg-inline-block d-none btn btn-light mt-2">
+                    <i class="fa fa-times me-1"></i>
+                    <span> Unselect </span>
+                </button>
+            </td>
+            <td>
+                <div class="bonus-employee-line-adress" t-if="props.bonus_employee.code_employee">
+                    <t t-esc="props.bonus_employee.code_employee" />
+                </div>
+            </td>
+        </tr>
+    </t>
+</template>

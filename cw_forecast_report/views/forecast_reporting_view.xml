@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="cw_ocm_forecast_tree_view" model="ir.ui.view">
+        <field name="name">cw.ocm.forecast.tree</field>
+        <field name="model">cw.ocm.forecast</field>
+        <field name="arch" type="xml">
+                <tree string="OCM Report List" multi_edit="1" edit="True" import="False" editable="bottom" default_order="categ_id,product_id asc" limit="80" create="False" js_class="forecast_report_legend" sample="1">
+                    <field name="copied_product_name" optional="hide" />
+                    <field name="record_id_value" optional="hide" />
+                    <field name="x_ListID" optional="hide" />
+                    <field name="x_FullName" optional="hide" />
+                    <field name="product_image" widget="image" class="custom-image-class" />
+                    <field name="product_id" widget="many2one" readonly="1" />
+                    <field name="X_SalesPrice" readonly="1" />
+                    <field name="X_isactive" optional="show" readonly="1" />
+                    <field name="stock_selling_status" readonly="1" optional="show" />
+                    <field name="should_be_ordered" readonly="1" optional="show" />
+                    <field name="OrderRecommend90" widget="integer" optional="show" force_save="1"  />
+                    <button name="create_rfq" string="Create P.O" type="object" class="btn-primary" invisible="OrderRecommend90 &lt;= 0" />
+                    <field name="action_buttons" widget="handle_buttons"/>
+                    <field name="AppearsInTargetItems" readonly="1" optional="show" />
+                    <field name="x_QTYonHand" readonly="1" optional="show" />
+                    <field name="X_QtyonOrder" readonly="1" optional="show" />
+                    <field name="stock_and_back_order" readonly="1" optional="hide" />
+                    <field name="in_draft_order" readonly="1" optional="show" />
+                    <field name="combined_30_days" readonly="1" optional="show" />
+                    <field name="combined_60_days" readonly="1" optional="show" />
+                    <field name="combined_90_days" readonly="1" optional="show" />
+                    <field name="combined_180_days" readonly="1" optional="show" />
+                    <field name="combined_365_days" readonly="1" optional="show" />
+                    <field name="nb_days_last_po" readonly="1" optional="show" />
+                    <field name="X_lastpurchaseOrderQTY" readonly="1" optional="show" />
+                    <field name="X_purchasecost" readonly="1" optional="show" />
+                    <field name="currency_id" widget="many2one" readonly="1" />
+                    <field name="nb_days_last_delivery" readonly="1" optional="show" />
+                    <field name="nb_since_last_stocktake" readonly="1" optional="hide" />
+                    <field name="is_stock_take_correct" readonly="1" optional="hide" />
+                    <field name="X_stockTakeOffby" readonly="1" optional="hide" />
+                    <field name="is_dead_stock" readonly="1" optional="hide" />
+                    <field name="should_be_deleted" readonly="1" optional="hide" />
+                    <field name="NumberofRefunds0n30" optional="hide" />
+                    <field name="x_lastPurchaseOrderDate" optional="hide" />
+                    <field name="X_lastPurchaseExchange" optional="hide" />
+                </tree>
+        </field>
+    </record>
+
+    <record id="action_launch_cw_forecast_report" model="ir.actions.act_window">
+        <field name="name">CW Forecast Report</field>
+        <field name="res_model">cw.ocm.forecast</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="cw_forecast_report.cw_ocm_forecast_tree_view"></field>
+        <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face" >
+                    View Forecast Report
+                </p>
+        </field>
+    </record>
+    
+
+    <record id="cw_ocm_forecast_view_search" model="ir.ui.view">
+        <field name="name">cw.ocm.forecast.search</field>
+        <field name="model">cw.ocm.forecast</field>
+        <field name="arch" type="xml">
+            <search string="Product">
+                <field name="product_id" string="Search by Product Name" filter_domain="['|', '|', '|', ('product_id.default_code', 'ilike', self), ('product_id.product_variant_ids.default_code', 'ilike', self),('product_id.name', 'ilike', self), ('product_id.barcode', 'ilike', self)]"/>
+                <field name="categ_id" filter_domain="[('categ_id', 'child_of', raw_value)]"/>
+                <field string="Vendor" name="seller_ids"/>
+                <separator/>
+                <filter name="should_be_ordered" string="Should be ordered" domain="[('should_be_ordered', '=', True)]"/>
+                <filter name="is_dead_stock" string="Dead stock" domain="[('is_dead_stock', '=', True)]"/>
+                <filter name="should_be_deleted" string="Product to delete" domain="[('should_be_deleted', '=', True)]"/>
+                <separator/>
+                <filter name="X_isactive" string="Active products" domain="[('X_isactive', '=', True)]"/>
+                <filter name="X_isactive" string="Inactive products" domain="[('X_isactive', '=', False)]"/>
+                <filter name="AppearsInTargetItems" string="Products in Target" domain="[('AppearsInTargetItems', '=', True)]"/>
+                <group expand="1" string="Group By">
+                    <filter name="categ_id" string="Product Category"  context="{'group_by': 'categ_id'}" />
+                    <filter name="seller_ids" string="Vendor"  context="{'group_by': 'seller_ids'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+    
+</odoo>

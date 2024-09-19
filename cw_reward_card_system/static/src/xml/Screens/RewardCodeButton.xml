@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="cw_reward_card_system.RewardCodeButton" owl="1">
+        <t>
+            <button class="control-button" t-on-click="() => this.onClick()">
+                <i class="fa fa-save" />
+                <t t-esc="state.buttonText" />
+            </button>
+        </t>
+    </t>
+</templates>

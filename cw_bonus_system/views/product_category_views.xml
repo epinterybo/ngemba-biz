@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="product_category_form_view" model="ir.ui.view">
+        <field name="name">cw_bonus_product.category.form</field>
+        <field name="model">product.category</field>
+        <field name="inherit_id" ref="product.product_category_form_view"></field>
+        <field name="arch" type="xml">
+                <xpath expr="//group[@name='first']" position="after">
+                    <group name="cw_customization" string="CW Customization">
+                        <!--<field name="x_cw_bonus_is_special_category" class="oe_inline" widget="boolean_toggle"></field>-->
+                        <field name="x_cw_bonus_point_for_category" />
+                    </group>
+                </xpath>
+                
+                    <!--<xpath expr="//group[@name='first']" position="inside">
+                        <group name="cw_data_customization" string="CW Data">
+                            <field name="x_cw_bonus_is_special_category"></field>
+                        </group>
+                    </xpath>-->
+                <!--<sheet>
+                    <xpath expr="//field[@name='parent_id']" position="after">
+                        <group>
+                            <group name="cw_customization" string="CW Customization">
+                                <field name="x_cw_bonus_is_special_category" class="oe_inline" widget="boolean_toggle"></field>
+                            </group>
+                        </group>
+                    </xpath>
+                </sheet>-->
+        
+        <!--
+                <xpath expr="//field[@name='avatax_category_id']" position="after">
+                    <group name="cw_customization">
+                        <group string="CW Customozations">
+                            <field name="x_cw_bonus_is_special_category"></field>
+                        </group>
+                    </group>
+                </xpath>
+        -->
+        </field>
+    </record>
+
+</odoo>

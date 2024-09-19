@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_reward_card_wizard_form" model="ir.ui.view">
+        <field name="name">reward.card.wizard.form</field>
+        <field name="model">cw.reward.card.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Reward Card Wizard">
+                <group>
+                    <field name="import_file" filename="import_file"/>
+                    <button name="import_cards" string="Import Cards" type="object" class="btn-primary"/>
+                </group>
+                <group>
+                    <field name="initial_points"/>
+                    <field name="generate_cards_count"/>
+                    <button name="generate_cards" string="Generate Cards" type="object" class="btn-primary"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_reward_card_wizard" model="ir.actions.act_window">
+        <field name="name">Reward Card Wizard</field>
+        <field name="res_model">cw.reward.card.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem
+        id="menu_root_cw_ocm_forecast"
+        name="CW Forecasting"
+        sequence="10">
+
+        <menuitem
+            id="menu_cw_forecasting_report"
+            name="Forecasting Report"
+            sequence="10"
+            action="cw_forecast_report.action_launch_cw_forecast_report"
+            />
+
+        <menuitem
+            id="menu_cw_old_order"
+            name="Sales Invoices"
+            sequence="11"
+            >
+            <menuitem id="menu_cw_old_order_line_list"  name="Sales Invoices" action="cw_forecast_report.action_launch_cw_old_sale_invoice" sequence="1"/>
+            <menuitem id="menu_cw_old_sales_order_line"  name="Orders Lines" action="cw_forecast_report.action_launch_cw_old_order_line" sequence="2"/>
+
+        </menuitem>
+
+        <menuitem
+            id="menu_cw_old_purchase_order"
+            name="Purchase order"
+            sequence="12"
+            >
+
+            <menuitem id="menu_cw_old_purchase_order_list"  name="Purchases orders" action="cw_forecast_report.action_launch_cw_old_purchase_order" sequence="1"/>
+            <menuitem id="menu_cw_old_po_order_line"  name="PO Orders Lines" action="cw_forecast_report.action_launch_cw_old_po_order_line" sequence="2"/>
+            <menuitem id="menu_cw_old_product_delivery"  name="Products Delivery" action="cw_forecast_report.action_launch_cw_old_product_delivery" sequence="3"/>
+
+        </menuitem>
+
+
+        <menuitem
+            id="menu_cw_old_purchase_order_list"
+            name="Stock Take"
+            sequence="13"
+            action="cw_forecast_report.action_launch_cw_old_stock_take"
+            />
+        
+    </menuitem>
+
+</odoo>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Tree View -->
+        <record id="cw_costing_costing_unique_prpduct_tree_view" model="ir.ui.view">
+            <field name="name">cw.costing.unique.product.tree</field>
+            <field name="model">cw.costing.unique.product</field>
+            <field name="arch" type="xml">
+                <tree default_order="created_at desc" create="True" edit="False" import="False" editable="bottom" >
+                    <field name="name" />
+                    <field name="product_id" />
+                    <field name="currency_id" />
+                    <field name="conversion_rate" />
+                    <field name="purchase_amount" />
+                    <field name="duty_rate" optional="hide" widget="percentage"/>
+                    <field name="shipping_rate" optional="hide" widget="percentage"/>
+                    <field name="warranty_rate" optional="hide" widget="percentage"/>
+                    <field name="vat_duty_others" optional="hide" widget="percentage"/>
+                    <field name="landed_cost" />
+                    <field name="price_exc" />
+                    <field name="price_inc" />
+                    <field name="profit_amount" />
+                    <field name="last_modified_id" optional="hide"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Search View -->
+        <record id="cw_costing_costing_unique_prpduct_view_search" model="ir.ui.view">
+            <field name="name">cw.costing.unique.product.search</field>
+            <field name="model">cw.costing.unique.product</field>
+            <field name="arch" type="xml">
+                <search string="Period">
+                    <field name="product_id" string="Search by Product Name" filter_domain="['|', '|', '|', ('product_id.default_code', 'ilike', self), ('product_id.product_variant_ids.default_code', 'ilike', self),('product_id.name', 'ilike', self), ('product_id.barcode', 'ilike', self)]"/>
+                    <separator/>
+                </search>
+            </field>
+        </record>
+
+
+
+        <!-- Form View -->
+        <record id="cw_costing_costing_unique_prpduct_form_view" model="ir.ui.view">
+            <field name="name">ccw.costing.unique.product.form</field>
+            <field name="model">cw.costing.unique.product</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="product_id"  widget="many2one" />
+                            <field name="currency_id" />
+                            <field name="conversion_rate" />
+                        </group>
+                        <group>
+                            <group name="left_main_group" string="Costing Params">
+                                    <field name="purchase_amount" default="0" class="small-width"/>
+                                    <field name="duty_rate" widget="percentage" default="0" class="small-width"/>
+                                    <field name="shipping_rate" widget="percentage" default="0" class="small-width"/>
+                                    <field name="warranty_rate" widget="percentage" default="0" class="small-width"/>
+                                    <field name="vat_duty_others" widget="percentage" default="0" class="small-width"/>
+                                    <field name="margin_rate" widget="percentage" default="0" class="small-width"/>
+                            </group>
+                            <div class="update-costing">
+                                <group name="fields_costing_estimation" string="Costing Estimation">
+                                    <field name="landed_cost" />
+                                    <field name="price_exc" />
+                                    <field name="price_inc" />
+                                    <field name="profit_amount" />
+                                </group>
+                            </div>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action for the Tree View -->
+        <record id="action_cw_costing_costing_unique_prpduct" model="ir.actions.act_window">
+            <field name="name">Product Costing</field>
+            <field name="res_model">cw.costing.unique.product</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="cw_costing_costing_unique_prpduct_tree_view"/>
+        </record>
+
+    </data>
+
+</odoo>

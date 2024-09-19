@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+	<t t-name="ybo_pos_cash_move.cash_move_popup_extend" owl="1">
+		<div class="combo-screen screen h-100 bg-100">
+			<div class="controls d-flex align-items-center justify-content-between mt-1 mt-md-0 p-2 bg-400">
+				<div class="buttons d-flex gap-2">
+					<button class="discard btn btn-lg btn-light" t-on-click="() => this.pos.showScreen('ProductScreen')">
+						<span class="search-icon">
+							<i class="fa fa-angle-double-left" />
+						</span>
+						Back
+					</button>
+				</div>
+			</div>
+			<div t-att-class="state.operationType === 'simple' || state.operationType === 'out' ? '' : 'bill-counting-container'">
+				<!-- <div class="bill-counting-container overflow-y-auto flex-grow-1"> -->
+				<div class="modal-header justify-content-center align-items-center gap-5">
+					<div>
+						<small>
+							<t t-esc="props.opTypeTitle" />
+						</small>
+						<div class="operation_t">
+							<label for="simple-count" class="input-type btn btn-secondary flex-fill operation_t_cash_in items-center py-2 fw-bolder">
+								<input checked="true" class="form-check-input" type="radio" name="cash-operation" id="simple-count" value="simple" t-on-change="updateOperationType" />
+								<span>
+									Simple Count
+								</span>
+							</label>
+							<label for="custom-cash-out" class="input-type btn btn-secondary flex-fill operation_t_cash_out items-center py-2 fw-bolder">
+								<input class="form-check-input" type="radio" name="cash-operation" id="custom-cash-out" t-on-change="updateOperationType" value="out" />
+								<span>
+									Cash Out
+								</span>
+							</label>
+							<label for="custom-cash-in" class="input-type btn btn-secondary flex-fill operation_t_cash_in items-center py-2 fw-bolder">
+								<input class="form-check-input" type="radio" name="cash-operation" id="custom-cash-in" value="in" t-on-change="updateOperationType" />
+								<span>
+									Cash In
+								</span>
+							</label>
+						</div>
+					</div>
+				</div>
+				<div class=" modal-body custom-form-view">
+					<div class="cash-move d-flex flex-column">
+						<div t-att-class="state.operationType === 'simple' || state.operationType === 'out' ? 'row' : ''">
+							<div t-att-class="state.operationType === 'simple' || state.operationType === 'out' ? 'col-md-6 col-12' : ''">
+								<div class="mx-4 overflow-y-auto flex-grow-1">
+									<t t-set="bills" t-value="Object.keys(state.moneyDetails).sort((a, b) => b - a)" />
+									<div t-attf-style="display: grid; grid-template-rows: repeat(calc({{bills.length}}/2) ,auto); grid-auto-flow: column;">
+										<div t-foreach="bills" t-as="moneyValue" t-key="moneyValue" class="d-flex align-items-center justify-content-center my-1 ">
+											<NumericInput class="'mx-2 w-50'" tModel="[state.moneyDetails, moneyValue]" min="0" />
+											<label class="oe_link_icon w-25 text-end">
+												<span class="mx-1" t-esc="env.utils.formatCurrency(_parseFloat(moneyValue))" />
+											</label>
+										</div>
+									</div>
+									<h4 class="total-section rounded py-2 text-right">
+										Total
+										<t t-esc="env.utils.formatCurrency(computeSubTotal())" />
+									</h4>
+								</div>
+							</div>
+							<t t-if="state.operationType === 'out'">
+								<div class="col-md-6 col-12">
+									<div class="border w-100 p-2 mb-4">
+										<div class="d-flex justify-content-between align-content-center w-100">
+											<h4>
+												Cheque
+											</h4>
+											<h4>
+												Total:
+												<t t-esc="env.utils.formatCurrency(summaryAmountBankCheck())" />
+												
+											</h4>
+											<div>
+												<button class="btn btn-primary" t-on-click="openAddBankCheckPopUp">
+													Add Bank Cheque
+												</button>
+											</div>
+										</div>
+										<!-- <div class="d-flex justify-content-between
+										align-content-center w-100">
+											
+											<div class="d-flex">
+												<input class="form-control" list="datalistOptions" id="exampleDataList" placeholder="Select cheque"
+										t-model="bankChequeSelected.value" />
+												<datalist id="datalistOptions">
+													<t t-foreach="savedBankChecksList.value" t-as="savedBankCheck" t-key="savedBankCheck.id">
+														<option t-att-value="savedBankCheck.id +' | ' +savedBankCheck.bank+' | ' +(!savedBankCheck.drawer ?
+										'Not define' : savedBankCheck.drawer)+' | '
+										+savedBankCheck.cheque_number+' | '
+										+savedBankCheck.account_number"></option>
+													</t>
+												</datalist>
+												<input type="number" class="form-control"  id="exampleDataList" placeholder="Amount (VT)"
+										t-model="bankChequeAmount.value" />
+											</div>
+											<button class="btn btn-primary" t-on-click="addBankCheque">
+												Add Bank Cheque
+											</button>
+										</div> -->
+										<div class="bank-check-list">
+											<table class="table">
+												<thead class="thead-light">
+													<tr>
+														<th scope="col">
+															Bank
+														</th>
+														<th scope="col">
+															Account #
+														</th>
+														<th scope="col">
+															Drawer
+														</th>
+														<th scope="col">
+															Cheque #
+														</th>
+														<th scope="col">
+															Amount (VT)
+														</th>
+														<th scope="col">
+														</th>
+													</tr>
+												</thead>
+												<tbody>
+													<t t-foreach="this.bankChecks.value" t-as="check" t-key="check.id">
+														<tr>
+															<th scope="row">
+																<t t-esc="check.bank" />
+															</th>
+															<td>
+																<t t-esc="check.account_number" />
+															</td>
+															<td>
+																<t t-esc="!check.drawer ? 'Not define' : check.drawer" />
+															</td>
+															<td>
+																<t t-esc="check.cheque_number" />
+															</td>
+															<td>
+																<t t-esc="check.amount" />
+															</td>
+															<td>
+																<i class="fa fa-edit btn btn-info" t-on-click="() => this.openUpdateBankCheckPopUp(check.id)">
+																</i>
+																<i class="fa fa-trash btn btn-danger" t-on-click="() => this.deleteCheck(check.id)">
+																</i>
+															</td>
+														</tr>
+													</t>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</t>
+							<t t-if="state.operationType === 'simple'">
+								<div class="col-md-6 col-12">
+										<div class="border w-100 p-2 mb-4">
+											<div class="d-flex justify-content-between mb-2 align-content-center w-100">
+												<h4>
+													<span class="me-4">
+														EFTPos
+													</span>
+												</h4>
+												<h4>
+													Total:
+													<t t-esc="env.utils.formatCurrency(summaryAmountFpos())" />
+													
+												</h4>
+												<div style="{max-width: 150px}" class="d-flex">
+													<div class="input-group">
+														<input type="number" step="0.01" class="form-control" placeholder="EFTPos Amount" aria-label="Amount" aria-describedby="fpos_amount" t-model="state.fpos_input" />
+														<span class="input-group-text btn btn-primary" id="fpos_amount" t-on-click="addFpos">
+															Add
+														</span>
+													</div>
+												</div>
+											</div>
+											<div class="d-flex flex-wrap border px-2 py-2 w-100">
+												<t t-foreach="fpos.value" t-as="fpos_item" t-key="fpos_item.id">
+													<div class="rounded border py-1 px-2 m-1">
+														<span class="me-1">
+															<t t-esc="fpos_item.amount" />
+															VT
+														</span>
+														<i class="fa fa-trash btn btn-danger" t-on-click="() => this.deleteFpos(fpos_item.id)">
+														</i>
+													</div>
+												</t>
+											</div>
+										</div>
+										<div class="border w-100 p-2 mb-4">
+											<div class="d-flex justify-content-between mb-2 align-content-center w-100">
+												<h4>
+													<span class="me-4">
+														Cheque
+													</span>
+												</h4>
+												<h4>
+													Total:
+													<t t-esc="env.utils.formatCurrency(summaryAmountCheckAmouts())" />
+													
+												</h4>
+												<div style="{max-width: 150px}" class="d-flex">
+													<div class="input-group">
+														<input type="number" step="0.01" class="form-control" placeholder="Cheque Amount" aria-label="Amount" aria-describedby="fpos_amount" t-model="state.check_amount_input" />
+														<span class="input-group-text btn btn-primary" id="fpos_amount" t-on-click="addCheckAmount">
+															Add
+														</span>
+													</div>
+												</div>
+											</div>
+											<div class="d-flex flex-wrap border px-2 py-2 w-100">
+												<t t-foreach="check_amounts.value" t-as="check_amount" t-key="check_amount.id">
+													<div class="rounded border py-1 px-2 m-1">
+														<span class="me-1">
+															<t t-esc="check_amount.amount" />
+															VT
+														</span>
+														<i class="fa fa-trash btn btn-danger" t-on-click="() => this.deleteCheckAmount(check_amount.id)">
+														</i>
+													</div>
+												</t>
+											</div>
+										</div>
+							
+								</div>
+							</t>
+						</div>
+						<div class="form-floating">
+							<textarea class="form-control" placeholder="Leave a reason here" name="reason" id="reason" t-model="state.reason" t-on-input="updateReason" style="height:100px;" />
+							<label for="reason">
+								Reason
+							</label>
+						</div>
+					</div>
+				</div>
+				<div class="footer footer-flex modal-footer justify-content-end">
+					<button t-on-click="() => this.confirmBtn()" type="button" class="button subimmissionBtn btn btn-lg btn-primary">
+						<t t-esc="props.confirmTextPart1" />
+						<span t-esc="env.utils.formatCurrency(computeTotal())" />
+					</button>
+					<div class="button cancel btn btn-lg btn-secondary" t-on-click="() => this.pos.showScreen('ProductScreen')">
+						<t t-esc="props.closePopup" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</t>
+</templates>

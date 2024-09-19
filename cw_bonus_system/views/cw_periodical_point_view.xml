@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Tree View -->
+        <record id="cw_bonus_periodical_points_tree_view" model="ir.ui.view">
+            <field name="name">cw.bonus.periodical.points.tree</field>
+            <field name="model">cw.bonus.periodical.points</field>
+            <field name="arch" type="xml">
+                <tree default_order="period_bonus_id desc, total_points desc" create="False" edit="True" import="False" editable="bottom" >
+                    <field name="employee_bonus_id" widget="many2one" />
+                    <field name="period_bonus_id" widget="many2one" optional="hide" />
+                    <field name="volume_bonus_points" />
+                    <field name="target_item_points" />
+                    <field name="special_cat_points" />
+                    <field name="stock_verify_points" />
+                    <field name="solar_points" />
+                    <field name="tills_or_onsite_points" />
+                    <field name="lab_points" />
+                    <field name="warranty_points" />
+                    <field name="strike" widget="percentage" />
+                    <button name="striking_point" string="Strike Line" type="object" class="btn-primary" invisible="strike &lt;= 0" />
+                    <field name="total_points" />
+                    <field name="total_points_with_strike" optional="show" />
+                </tree>
+            </field>
+        </record>
+
+        <!-- Search View -->
+        <record id="cw_bonus_periodical_points_view_search" model="ir.ui.view">
+            <field name="name">cw.bonus.periodical.points.search</field>
+            <field name="model">cw.bonus.periodical.points</field>
+            <field name="arch" type="xml">
+                <search string="Period">
+                    <field name="employee_bonus_id" string="Search by employee" />
+                    <field name="period_bonus_id" string="Search by Period"  />
+                    <field name="total_points" string="Search by total point"/>
+                    <!-- Specify default filter criteria for period_bonus_id -->
+                    <!--<filter name="default_period_id" string="Default Period" domain="[('period_bonus_id', '=', '2')]"/>-->
+                    <separator/>
+                    <!--<filter name="current_period" string="Current Period"  domain="[('period_bonus_id.id', '=', context.get('parameter_name'))]"/>-->
+                    <filter name="current_period" string="Current Period"  domain="[('period_bonus_id.name', 'ilike', context.get('current_period_str'))]"/>
+                </search>
+            </field>
+        </record>
+
+
+
+        <!-- Form View -->
+        <record id="cw_bonus_periodical_points_form_view" model="ir.ui.view">
+            <field name="name">cw.bonus.periodical.points.form</field>
+            <field name="model">cw.bonus.periodical.points</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="period_bonus_id"/>
+                            <field name="employee_bonus_id"  />
+                            <field name="total_points" />
+                        </group>
+
+                        <notebook colspan="4">
+                            <page name="point_tracking" string="Point Tracking">
+                                <group>
+                                    <field name="points_tracking_ids" />
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action for the Tree View -->
+        <record id="action_cw_bonus_periodical_points" model="ir.actions.act_window">
+            <field name="name">Bonus Points</field>
+            <field name="res_model">cw.bonus.periodical.points</field>
+            <field name="view_mode">tree,form</field>
+            <!--<field name="search_view_id" ref="cw_bonus_periodical_points_tree_view_search"/>-->
+            <!--<field name="context">{'search_ddefault_period_id': 1}</field>-->
+            <!--<field name="context">{'parameter_name': models['cw.bonus.periodical.points'].get_param_value(), 'search_default_current_period': 1}</field>-->
+            <field name="context">{'parameter_name': 1, 'search_default_current_period': 1, 'current_period_str': context_today().strftime('%Y_%m_')}</field>
+            <field name="view_id" ref="cw_bonus_periodical_points_tree_view"/>
+        </record>
+
+    </data>
+
+</odoo>

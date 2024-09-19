@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem
+        id="menu_root_cw_reward_system"
+        name="Reward System"
+        sequence="10">
+
+            <menuitem
+                id="menu_reward_cards_list"
+                name="Cards List"
+                action="cw_reward_card_system.cw_reward_card_action"
+                sequence="10"/>
+
+        </menuitem>
+
+</odoo>

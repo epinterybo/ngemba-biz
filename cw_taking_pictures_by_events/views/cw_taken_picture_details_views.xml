@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_cw_taken_picture_details_tree" model="ir.ui.view">
+        <field name="name">cw.taken.picture.details.tree</field>
+        <field name="model">cw.taken.picture.details</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="picture_file_path"/>
+                <field name="picture_data" widget="image" style="max-width: 600px; max-height: 600px;" options="{'preview_image': 'true'}" />
+            </tree>
+        </field>
+    </record>
+</odoo>

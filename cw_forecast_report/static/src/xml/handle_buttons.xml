@@ -1,0 +1,8 @@
+<t t-name="cw_forecast_report.HandleButtons">
+    <div>
+        <button t-on-click="onButtonClick1" t-ref="button1" t-att-data-product-name="props.record.data.copied_product_name" class="btn btn-secondary btn-sm">
+            <i class="fa fa-clipboard"></i>Copy Name
+        </button>
+        <button t-on-click="onButtonClick2" t-ref="button2" t-att-data-record-id="props.record.data.record_id_value" class="btn btn-secondary btn-sm">Button 2</button>
+    </div>
+</t>

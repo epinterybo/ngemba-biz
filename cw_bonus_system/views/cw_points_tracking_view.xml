@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Tree View -->
+    <record id="cw_bonus_points_tracking_tree_view" model="ir.ui.view">
+        <field name="name">cw.bonus.points.tracking.tree</field>
+        <field name="model">cw.bonus.points.tracking</field>
+        <field name="arch" type="xml">
+            <tree default_order="created_date desc" create="False" edit="False">
+                <field name="employee_bonus_id" widget="many2one" />
+                <field name="product_id" widget="many2one" />
+                <field name="is_product_favorite" />
+                <field name="points" />
+                <field name="pos_order_id" widget="many2one" />
+                <field name="sale_order_id" widget="many2one" />
+                <field name="created_date" />
+                <!--<field name="periodical_point_id" />-->
+            </tree>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="cw_bonus_points_tracking_tree_view_search" model="ir.ui.view">
+        <field name="name">cw.bonus.points.tracking.search</field>
+        <field name="model">cw.bonus.points.tracking</field>
+        <field name="arch" type="xml">
+            <search string="Period">
+                <field name="employee_bonus_id" string="Search by employee" />
+                <field name="product_id" string="Search by Product" />
+                <field name="pos_order_id" string="Search by POS Order"/>
+                <field name="sale_order_id" string="Search by Sale Order"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action for the Tree View -->
+    <record id="action_cw_bonus_points_tracking" model="ir.actions.act_window">
+        <field name="name">Points History</field>
+        <field name="res_model">cw.bonus.points.tracking</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="cw_bonus_points_tracking_tree_view"/>
+    </record>
+
+</odoo>

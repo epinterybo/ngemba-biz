@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="ybo_pos_cash_move_pos_simple_count_action" model="ir.actions.act_window">
+        <field name="name">Simple Count</field>
+        <field name="res_model">ybo_pos_cash_move.pos_simple_count</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <h3 class="oe_view_nocontent_create">No Simple count done !</h3>
+        </field>
+    </record>
+    <record id="view_pos_simple_count_report_tree" model="ir.ui.view">
+        <field name="name">ybo_pos_simple_count_move_pos_simple_count.tree</field>
+        <field name="model">ybo_pos_cash_move.pos_simple_count</field>
+        <field name="arch" type="xml">
+            <tree string="POS Cash Report" create="false" default_order="create_date desc">
+                <field name="reference_code"/>
+                <field name="pos_name"/>
+                <field name="cashier_id"/>
+                <field name="state" string="State"/>
+                <field name="currency_id" column_invisible="True" on_change="1"/>
+                <field name="formatted_total_counted" string="Amount (VT)"/>
+
+                <field name="state" widget="badge" decoration-danger="state == 'rejected'" decoration-info="state == 'pending'" decoration-success="state =='approved'"/>
+                <field name="admin_id" string="Approved by" optional="hide"/>
+                <field name="approval_date_time" string="Approved On" optional="hide"/>
+                <field name="create_date" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="ybo_pos_cash_move_pos_simple_count_report_search" model="ir.ui.view">
+        <field name="name">ybo_pos_cash_move_poscashreport.search</field>
+        <field name="model">ybo_pos_cash_move.pos_cash_report</field>
+        <field name="arch" type="xml">
+            <search string="POS Cash Report Search">
+                <field name="pos_name"/>
+                <field name="pos_session"/>
+                <field name="cashier_id"/>
+                
+                <field name="create_date" string="Created Date"/>
+
+                <filter string="Created Date" name="created_date" domain="[]" context="{'group_by':'create_date'}"/>
+                <filter string="POS Name" name="pos_name" domain="[]" context="{'group_by':'pos_name'}"/>
+                <filter string="POS Session" name="pos_session" domain="[]" context="{'group_by':'pos_session'}"/>
+                <filter string="Cashier" name="cashier_id" domain="[]" context="{'group_by':'cashier_id'}"/>
+            
+            </search>
+        </field>
+    </record>
+
+    <!-- Form -->
+    <record id="ybo_pos_cash_move_pos_simple_count_form" model="ir.ui.view">
+        <field name="name">ybo_pos_cash_move_pos_simple_count.form</field>
+        <field name="model">ybo_pos_cash_move.pos_simple_count</field>
+        <field name="arch" type="xml">
+            <form string="Validation form" create="false">
+                <header>
+                    <button name="set_approved" icon="fa-check"
+                            class="btn btn-primary" type="object" string="Approve"
+                            invisible="state in ['approved','rejected']"
+                            confirm="Are you sure about approving this transaction ?"/>
+
+                    <button name="set_reject" icon="fa-times"
+                            class="btn btn-secondary" type="object" string="Reject"
+                            invisible="state in ['approved','rejected']"
+                            confirm="Are you sure about approving this transaction ?"/>
+
+                    <field name="state" widget="statusbar" statusbar_visibile="pending,approved,rejected"/>
+                </header>
+                <sheet>
+                    <div class="d-flex gap-4">
+                        <div class="w-100 w-md-30 ">
+                            <h2>
+                                <p class="o_form_label o_form_label_readonly">
+                                    <small>Amount counted</small>
+                                </p>
+                                <field name="currency_id" invisible="1"/>
+                                <field name="total_counted" widget="monetary"
+                                    />
+                            </h2>
+                        
+                            <group>
+                                <field name="total_bill_coin"/>
+                                <field name="total_cheque"/>
+                                <field name="total_pos_eft"/>
+                                <field name="cashier_id"/>
+                                <field name="pos_name"/>
+                            </group>
+                        </div>
+                        <div class="w-100 w-md-30 ">
+                            <h2>
+                                <p class="o_form_label o_form_label_readonly">
+                                    <small>Amount Expected</small>
+                                </p>
+                                <field name="expected_amount" widget="monetary"
+                                    options="{'currency_field': 'currency_id'}" />
+                            </h2>
+                            <group>
+                                <field name="expected_cash" />
+                                <field name="total_cheque_expected"/>
+                                <field name="total_expect_f_pos"/>
+                                <field name="pos_session" />
+                                <field name="admin_id"  invisible="state in ['pending']" />
+                            
+                            </group>
+                        </div>
+                        <div class="w-100 w-md-40">
+                            <h2>
+                                <p class="o_form_label o_form_label_readonly">
+                                    <small>Difference</small>
+                                </p>
+                                
+                                <field name="total_difference" widget="monetary"
+                                    options="{'currency_field': 'currency_id'}" 
+                                    decoration-danger=" -1* (total_difference) > 0 " 
+                                    decoration-warning="  (total_difference) > 0 "/>
+                            </h2>
+                            <h2>
+                                <p class="o_form_label o_form_label_readonly">
+                                    Cashier reason for  operation
+                                </p>
+                                <p class="o_form_label o_form_label_readonly">
+                                    <field name="cashier_comment" />
+                                </p>
+                            
+                            </h2>
+                            <div>
+                                <p class="o_form_label o_form_label_readonly">
+                                    Admin reason for operation
+                                </p>
+                                <field name="admin_comment"/>
+                            </div>
+    
+                        </div>
+                    </div>
+                    <notebook>
+                        <page name="bill_coin" string="Bills / Coins">
+                            <div class="d-flex gap-4"> 
+                                <div class="w-50 w-md-25">
+                                    <group>
+                                        <field name="total_10000_vt" string="10000 VT"/>
+                                        <field name="total_5000_vt" string="5000 VT"/>
+                                        <field name="total_2000_vt" string="2000 VT"/>
+                                        <field name="total_1000_vt" string="1000 VT"/>
+                                        <field name="total_500_vt" string="500 VT"/>
+                                        <field name="total_200_vt" string="200 VT"/>
+                                
+                                    </group>
+                                </div>
+                                <div class="w-50 w-md-25">
+                                    <group>
+                                        
+                                        <field name="total_100_vt" string="100 VT"/>
+                                        <field name="total_50_vt" string="50 VT"/>
+                                        <field name="total_20_vt" string="20 VT"/>
+                                        <field name="total_10_vt" string="10 VT"/>
+                                        <field name="total_5_vt" string="5 VT"/>
+                                    </group>
+                                </div>
+
+                            </div>
+                        </page>
+                        
+                        <page name="cheques" string="Cheques">
+                            <field name="cheques_id">
+                                <tree editable="bottom">
+                                    <field class="text-align-center" name="amount" widget="monetary"
+                                        options="{'currency_field': 'currency_id'}" />
+                                    <field name="bank" />
+                                    <field name="drawer" />
+                                    <field name="account_number" />
+                                    <field name="cheque_number" />
+                                    <field name="currency_id" invisible="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page name="expected_cheques" string="Expected cheques">
+                            <field name="expected_cheques">
+                                <tree editable="bottom">
+                                    <field class="text-align-center" name="amount" widget="monetary"
+                                        options="{'currency_field': 'currency_id'}" />
+                                    <field name="bank_id" />
+                                    <field name="partner_id" />
+                                    <field name="check_bank_account" />
+                                    <field name="check_number" />
+                                    <field name="currency_id" invisible="1"/>
+                                </tree>
+
+                            </field>
+                        </page>
+                        <page name="f_pos_list" string="FPOS List">
+                            <group>
+                                <field name="f_pos_list_display" readonly="1"/>
+                                <field name="f_pos_expected_list_display" readonly="1"/>
+                            </group>
+                        </page>
+                        
+                        <page name="proposal" string="Withdraw Proposal" invisible="state in ['rejected','pending']">
+                            <div class="d-flex gap-4"> 
+                                <div class="w-50 w-md-25">
+                                    <h2>
+                                        <p class="o_form_label o_form_label_readonly">
+                                            <small>Amount Propose to Cashout</small>
+                                        </p>
+                                        <field name="propose_cash_out_amount" widget="monetary"
+                                            options="{'currency_field': 'currency_id'}" />
+                                    </h2>
+                                    <group>
+                                        <field name="total_10000_vt_proposal" string="10000 VT"/>
+                                        <field name="total_5000_vt_proposal" string="5000 VT"/>
+                                        <field name="total_2000_vt_proposal" string="2000 VT"/>
+                                        <field name="total_1000_vt_proposal" string="1000 VT"/>
+                                        <field name="total_500_vt_proposal" string="500 VT"/>
+                                    
+                                    </group>
+                                </div>
+                                <div class="w-50 w-md-25">
+                                    <h2>
+                                        <p class="o_form_label o_form_label_readonly">
+                                            
+                                        </p>
+                                        <p class="o_form_label o_form_label_readonly">
+                                            
+                                        </p>
+                                        <p class="o_form_label o_form_label_readonly">
+                                            
+                                        </p>
+                                        <p class="o_form_label o_form_label_readonly">
+                                            
+                                        </p>
+                                        
+                                    </h2>
+                                    <group>
+
+                                        <field name="total_200_vt_proposal" string="200 VT"/>
+                                        <field name="total_100_vt_proposal" string="100 VT"/>
+                                        <field name="total_50_vt_proposal" string="50 VT"/>
+                                        <field name="total_20_vt_proposal" string="20 VT"/>
+                                        <field name="total_10_vt_proposal" string="10 VT"/>
+                                        <field name="total_5_vt_proposal" string="5 VT"/>
+                                    </group>
+                                </div>
+
+                            </div>
+
+                            <h2>
+                                <p class="o_form_label o_form_label_readonly">
+                                    <small>Amount Propose Left</small>
+                                </p>
+                                <field name="propose_cash_out_amount_left" widget="monetary"
+                                    options="{'currency_field': 'currency_id'}" />
+                            </h2>
+                        </page>
+                        
+                    </notebook>
+                    
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!-- Menu -->
+    <menuitem
+            id="ybo_pos_cash_move_pos_simple_count_menu"
+            name="Simple count"
+            action="ybo_pos_cash_move_pos_simple_count_action"
+            parent="point_of_sale.menu_point_rep"
+            sequence="7"/>
+</odoo>

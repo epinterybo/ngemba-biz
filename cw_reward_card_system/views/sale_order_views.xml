@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form_inherit_cw_reward" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.cw.reward</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <group name="order_details" position="after">
+                <group>
+                    <field name="cw_spend_points"/>
+                    <field name="cw_reward_card_id" invisible="not cw_spend_points"/>
+                    <field name="cw_card_total_points" invisible="not cw_spend_points"/>
+                </group>
+            </group>
+        </field>
+    </record>
+</odoo>

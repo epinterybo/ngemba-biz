@@ -1,0 +1,3 @@
+About to create file data_20240715_234828.jpg related to the model pos.order with record id 16
+Image downloaded and saved as /Users/toupesusa/odoo/odoo_17/cw/cw_taking_pictures_by_events/snapshots_pics/data_20240715_234828.jpg
+Handling async callback result failed: can only concatenate str (not "NoneType") to str

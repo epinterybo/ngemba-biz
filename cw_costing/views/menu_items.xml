@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem
+        id="menu_root_cw_costing"
+        name="CW  Costing"
+        sequence="10">
+
+        <menuitem
+                id="menu_cw_costing_costing_grouping_po"
+                name="PO Costing"
+                action="action_cw_costing_costing_grouping_po"
+                sequence="1"/>
+        
+        <menuitem
+                id="menu_cw_costing_costing_unique_product"
+                name="Product Costing"
+                action="action_cw_costing_costing_unique_prpduct"
+                sequence="2"/>
+
+        <!--
+        <menuitem
+                id="menu_cw_costing_harmonized_codes"
+                name="Harmonized Codes"
+                action="action_cw_costing_harmonized_code"
+                sequence="2"/>
+
+        
+        <menuitem 
+                id="menu_cw_costing_harmonized_codes"
+                name="Harmonized Codes" 
+                action="cw_costing_harmonized_code_action_window"
+                sequence="3"/>
+                -->
+
+    </menuitem>
+    
+
+</odoo>

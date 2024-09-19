@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="cw_old_order_tree_view" model="ir.ui.view">
+        <field name="name">cw.old.order.line.tree</field>
+        <field name="model">cw.old.order.line</field>
+        <field name="arch" type="xml">
+            <tree string="Orders Lines" multi_edit="1" edit="True" import="True" default_order="x_cw_invoice_ref_number desc" limit="80" create="True">
+                <field name="x_cw_invoice_ref_number"></field>
+                <field name="x_cw_product_list_id"></field>
+                <field name="x_cw_order_line_quantity"></field>
+                <field name="x_cw_unit_price"></field>
+                <field name="x_cw_total_price"></field>
+                <field name="product_id" widget="many2one" readonly="1" />
+                <field name="x_cw_old_sale_invoice_id"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="cw_old_order_tree_view_search" model="ir.ui.view">
+        <field name="name">cw.old.order.line.search</field>
+        <field name="model">cw.old.order.line</field>
+        <field name="arch" type="xml">
+            <search string="Product">
+                <field name="x_cw_invoice_ref_number" string="Search by  Invoice Id" />
+                <field name="x_cw_product_list_id" string="Search by  Product List ID"/>
+                <field name="product_id" string="Search by Product Name" filter_domain="['|', '|', '|', ('product_id.default_code', 'ilike', self), ('product_id.product_variant_ids.default_code', 'ilike', self),('product_id.name', 'ilike', self), ('product_id.barcode', 'ilike', self)]"/>
+                <separator/>
+                <group expand="1" string="Group By">
+                    <filter name="x_cw_invoice_ref_number" string="Invoice Ref Number"  context="{'group_by': 'x_cw_invoice_ref_number'}" />
+                    <filter name="x_cw_product_list_id" string="Product List ID"  context="{'group_by': 'x_cw_product_list_id'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+
+    <record id="action_launch_cw_old_order_line" model="ir.actions.act_window">
+        <field name="name">CW Old Order Line</field>
+        <field name="res_model">cw.old.order.line</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="cw_forecast_report.cw_old_order_tree_view"></field>
+        <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face" >
+                    View CW Old Order Line
+                </p>
+        </field>
+    </record>
+
+
+
+</odoo>
