@@ -10,6 +10,7 @@ A module that adds a 2 step stock verification step to the Odoo 17 POS orders
     'depends': ['stock', 'sale', 'point_of_sale'],
     'data': [
         'data/dummy_client_data.xml',
+        'data/sequence_data.xml',
         'views/res_config_settings_view.xml',
     ],
     'assets': {

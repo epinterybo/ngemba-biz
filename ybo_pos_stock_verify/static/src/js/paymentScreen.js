@@ -16,14 +16,15 @@ patch(PaymentScreen.prototype, {
     async validateOrder(isForceValidate) {
         let is_allow_multi_step_delivery = this.pos.config.allow_multi_step_delivery;
         let order = this.pos.get_order();
-
+        
+        return await super.validateOrder(...arguments);
         // If multi-step delivery is allowed and no partner is selected
-        if (is_allow_multi_step_delivery && order.partner === null) {
-            // Show confirmation popup
+        /*if (is_allow_multi_step_delivery && order.partner === null) {
+            Show confirmation popup
             const {confirmed} = await this.popup.add(ConfirmPopup, {
                 title: _t("Attention no Customer Selected!"),
                 confirmText: _t("Proceed anyway"),
-                body: _t("This POS is configured for 2-step verification. Do you still wish to proceed without the client?"),
+                body: _t("This POS is configured for 2-step verification. Do you still wish to proceed without selecting the client?"),
             });
 
             // If confirmed, proceed with order validation
@@ -33,7 +34,7 @@ patch(PaymentScreen.prototype, {
         } else {
             // If no multi-step delivery or a partner is selected, proceed with order validation
             return await super.validateOrder(...arguments);
-        }
+        }*/
     }
 
 })

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="seq_picking_pos_internal" model="ir.sequence">
+            <field name="name">POS Internal Picking</field>
+            <field name="code">stock.picking.pos.internal</field>
+            <field name="prefix">POS/INT/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="seq_picking_pos_out" model="ir.sequence">
+            <field name="name">POS Out Picking</field>
+            <field name="code">stock.picking.pos.out</field>
+            <field name="prefix">POS/OUT/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+</odoo>

@@ -35,7 +35,7 @@ class SaleOrder(models.Model):
                 #Make second line quantity same as first line
                 next_line.product_uom_qty = current_line.product_uom_qty
                 next_line.product_uom = current_line.product_uom
-                
+
 
 
     @api.model
@@ -54,4 +54,3 @@ class SaleOrder(models.Model):
             for order in self:
                 order._check_optional_products(order.order_line)
         return res
-

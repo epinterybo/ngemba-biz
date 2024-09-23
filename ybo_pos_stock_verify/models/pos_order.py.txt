@@ -61,6 +61,7 @@ class PosOrder(models.Model):
     @api.model
     def _create_picking_from_pos_order_lines(self, location_init_id, location_dest_id, lines, picking_type,
                                              partner=False):
+        """Create stock pickings from POS order lines"""
         pickings = self.env['stock.picking']
         stockable_lines = lines.filtered(
             lambda l: l.product_id.type in ['product', 'consu'] and not float_is_zero(l.qty,
@@ -81,6 +82,8 @@ class PosOrder(models.Model):
             # Create moves and log the created moves
             self._create_move_from_pos_order_lines(positive_picking, positive_lines)
 
+            self.env.cr.commit()  # Commit to ensure move lines are in the database
+
             pickings |= positive_picking
 
         if negative_lines:
@@ -98,6 +101,8 @@ class PosOrder(models.Model):
             # Create moves and log the created moves
             self._create_move_from_pos_order_lines(negative_picking, negative_lines)
 
+            self.env.cr.commit()  # Commit to ensure move lines are in the database
+
             pickings |= negative_picking
 
         return pickings
@@ -109,8 +114,10 @@ class PosOrder(models.Model):
 
     @api.model
     def _create_order_picking(self):
+        """Create stock pickings for the POS order"""
         self.ensure_one()
         if self.config_id.allow_multi_step_delivery:
+
             intermediate_location = self.config_id.intermediate_location_id
             initial_location = self.config_id.initial_location_id
             customer_location = self.partner_id.property_stock_customer
@@ -121,18 +128,15 @@ class PosOrder(models.Model):
                 raise UserError(_("Initial Location not found"))
             if not customer_location:
                 last_customer = self._get_last_customer_with_location()
+                _logger.info("Last customer: %s", last_customer)
                 if last_customer:
                     customer_location = last_customer.property_stock_customer
                 else:
-                    return super(PosOrder, self)._create_order_picking()
+                    super(PosOrder, self)._create_order_picking()
+
 
             picking_type_internal = self.env.ref('stock.picking_type_internal')
             picking_type_out = self.env.ref('stock.picking_type_out')
-
-            # Generate a unique name for the first picking
-            first_picking_name = self.env['ir.sequence'].next_by_code('stock.picking.pos.internal')
-            if not first_picking_name:
-                first_picking_name = self.env['ir.sequence'].next_by_code('stock.picking') or '/'
 
             # First picking: from stock to intermediate location
             first_picking = self._create_picking_from_pos_order_lines(
@@ -142,7 +146,6 @@ class PosOrder(models.Model):
                 self.partner_id
             )
             first_picking.write({
-                'name': first_picking_name,
                 'pos_session_id': self.session_id.id,
                 'pos_order_id': self.id,
                 'origin': self.name
@@ -151,12 +154,7 @@ class PosOrder(models.Model):
             # Confirm and mark the first picking as done
             first_picking.action_confirm()
             first_picking.action_assign()
-            first_picking.button_validate()
-
-            # Generate a unique name for the second picking
-            second_picking_name = self.env['ir.sequence'].next_by_code('stock.picking.pos.out')
-            if not second_picking_name:
-                second_picking_name = self.env['ir.sequence'].next_by_code('stock.picking') or '/'
+            first_picking.button_validate()  # This marks it as done
 
             # Second picking: from intermediate location to customer
             second_picking = self._create_picking_from_pos_order_lines(
@@ -166,7 +164,6 @@ class PosOrder(models.Model):
                 self.partner_id
             )
             second_picking.write({
-                'name': second_picking_name,
                 'pos_session_id': self.session_id.id,
                 'pos_order_id': self.id,
                 'origin': self.name,

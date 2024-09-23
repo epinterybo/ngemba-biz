@@ -8,6 +8,7 @@
                 <field name="product_id"/>
                 <field name="quantity_delivered"/>
                 <field name="sale_order_id"/>
+                <field name="partner_id"/>
                 <field name="duration"/>
                 <field name="state"/>
                 <field name="start_date"/>
@@ -29,6 +30,8 @@
                         <field readonly="1" name="product_id"/>
                         <field readonly="1" name="duration"/>
                         <field readonly="1" name="state"/>
+                        <field readonly="1" name="partner_id"/>
+                        <field readonly="1" name="partner_id"/>
                         <field readonly="1" name="sale_order_id"/>
                         <field readonly="1" name="start_date"/>
                         <field readonly="1" name="end_date"/>
@@ -46,14 +49,13 @@
     </record>
 
     <menuitem id="menu_product_warranty"
-              name="Product Warranties"
-              action="action_product_warranty"
-              parent="stock.menu_stock_root"
-              sequence="100"/>
+          name="Product Warranties"
+          action="action_product_warranty"
+          parent="stock.menu_warehouse_report"
+          sequence="300"/>
     <menuitem id="menu_product_warranty_sale"
               name="Product Warranties"
               action="action_product_warranty"
               parent="sale.menu_sale_report"
               sequence="200"/>
 </odoo>
-

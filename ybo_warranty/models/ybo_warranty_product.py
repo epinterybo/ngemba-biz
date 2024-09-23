@@ -1,6 +1,7 @@
 from odoo import models, fields, api
 from datetime import datetime
 
+
 class WarrantyProduct(models.Model):
     _name = 'ybo.warranty.product'
     _description = 'Warranty Product Information'
@@ -17,6 +18,12 @@ class WarrantyProduct(models.Model):
         ('active', 'Active'),
         ('expired', 'Expired')
     ], string='Status', compute='_compute_state', store=True)
+    partner_id = fields.Many2one('res.partner', string='Customer', store=False, compute='_compute_partner_id')
+
+    @api.depends('sale_order_id')
+    def _compute_partner_id(self):
+        for record in self:
+            record.partner_id = record.sale_order_id.partner_id
 
     @api.depends('end_date')
     def _compute_remaining_duration(self):
