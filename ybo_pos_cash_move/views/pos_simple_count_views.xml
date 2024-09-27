@@ -69,8 +69,8 @@
                     <field name="state" widget="statusbar" statusbar_visibile="pending,approved,rejected"/>
                 </header>
                 <sheet>
-                    <div class="d-flex gap-4">
-                        <div class="w-100 w-md-30 ">
+                    <div class="row">
+                        <div class="col-12 col-sm-6 col-md-4  ">
                             <h2>
                                 <p class="o_form_label o_form_label_readonly">
                                     <small>Amount counted</small>
@@ -84,11 +84,11 @@
                                 <field name="total_bill_coin"/>
                                 <field name="total_cheque"/>
                                 <field name="total_pos_eft"/>
-                                <field name="cashier_id"/>
                                 <field name="pos_name"/>
+                                <field name="cashier_id"/>
                             </group>
                         </div>
-                        <div class="w-100 w-md-30 ">
+                        <div class="col-12 col-sm-6 col-md-4  ">
                             <h2>
                                 <p class="o_form_label o_form_label_readonly">
                                     <small>Amount Expected</small>
@@ -105,7 +105,7 @@
                             
                             </group>
                         </div>
-                        <div class="w-100 w-md-40">
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-4">
                             <h2>
                                 <p class="o_form_label o_form_label_readonly">
                                     <small>Difference</small>
@@ -116,6 +116,10 @@
                                     decoration-danger=" -1* (total_difference) > 0 " 
                                     decoration-warning="  (total_difference) > 0 "/>
                             </h2>
+                            <group>
+                                <field name="final_count"/>
+                                
+                            </group>
                             <h2>
                                 <p class="o_form_label o_form_label_readonly">
                                     Cashier reason for  operation
@@ -163,32 +167,50 @@
                         </page>
                         
                         <page name="cheques" string="Cheques">
-                            <field name="cheques_id">
-                                <tree editable="bottom">
-                                    <field class="text-align-center" name="amount" widget="monetary"
-                                        options="{'currency_field': 'currency_id'}" />
-                                    <field name="bank" />
-                                    <field name="drawer" />
-                                    <field name="account_number" />
-                                    <field name="cheque_number" />
-                                    <field name="currency_id" invisible="1"/>
-                                </tree>
-                            </field>
+                            <div class="row">
+                                <div class="col-12 col-lg-6 ">  
+                                    <h2>
+                                        Counted
+                                    </h2>
+                                    <br/>
+                                    <div class="p-3">
+                                        <field name="cheques_id">
+                                            <tree editable="bottom">
+                                                <field class="text-align-center" name="amount" widget="monetary"
+                                                    options="{'currency_field': 'currency_id'}" />
+                                                <field name="bank" />
+                                                <field name="drawer" />
+                                                <field name="account_number" />
+                                                <field name="cheque_number" />
+                                                <field name="currency_id" invisible="1"/>
+                                            </tree>
+                                        </field>
+                                    </div>
+                                
+                                </div>
+                                <div class="col-12 col-lg-6 "> 
+                                    <h2>
+                                        Expected
+                                    </h2>
+                                    <br/>
+                                    <div class="p-3">
+                                        <field name="expected_cheques">
+                                            <tree editable="bottom">
+                                                <field class="text-align-center" name="amount" widget="monetary"
+                                                    options="{'currency_field': 'currency_id'}" />
+                                                <field name="bank_id" />
+                                                <field name="partner_id" />
+                                                <field name="check_bank_account" />
+                                                <field name="check_number" />
+                                                <field name="currency_id" invisible="1"/>
+                                            </tree>
+                                        </field>
+                                    </div>
+                                
+                                </div>
+                            </div>    
                         </page>
-                        <page name="expected_cheques" string="Expected cheques">
-                            <field name="expected_cheques">
-                                <tree editable="bottom">
-                                    <field class="text-align-center" name="amount" widget="monetary"
-                                        options="{'currency_field': 'currency_id'}" />
-                                    <field name="bank_id" />
-                                    <field name="partner_id" />
-                                    <field name="check_bank_account" />
-                                    <field name="check_number" />
-                                    <field name="currency_id" invisible="1"/>
-                                </tree>
 
-                            </field>
-                        </page>
                         <page name="f_pos_list" string="FPOS List">
                             <group>
                                 <field name="f_pos_list_display" readonly="1"/>

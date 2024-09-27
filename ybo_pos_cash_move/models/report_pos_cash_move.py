@@ -6,6 +6,7 @@ from odoo.exceptions import UserError
 
 class BankReport(models.AbstractModel):
     _name = 'report.ybo_pos_cash_move.report_pos_cash_move'
+    _description = 'Report  POS Cash Move'
 
     def _get_report_values(self, docids, data=None):
         docs = self.env['ybo_pos_cash_move.pos_cash_report'].browse(docids)
@@ -13,6 +14,7 @@ class BankReport(models.AbstractModel):
         
         if docs.state != "approved" :
             raise UserError("You can only generate a Bank Report for approved operation")
+
 
         # List of bill fields
         bill_fields = [

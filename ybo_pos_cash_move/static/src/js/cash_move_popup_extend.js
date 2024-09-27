@@ -49,7 +49,10 @@ class CashMovePopupExtend extends Component {
             value: [
 
             ]
-        })
+        });
+        this.withdrawBills = this.bankChecks = useState({
+            value: null
+        });
         this.bankChecks = useState({
             value: []
         });
@@ -71,6 +74,7 @@ class CashMovePopupExtend extends Component {
             reason: "",
             fpos_input: null,
             check_amount_input: null,
+            isFinalCount: false,
             moneyDetails: this.props.moneyDetails
                 ? { ...this.props.moneyDetails }
                 : Object.fromEntries(this.pos.bills.map((bill) => [bill.value, 0])),
@@ -144,34 +148,41 @@ class CashMovePopupExtend extends Component {
 
     async fetchDataFromModel(pos_session_id) {
         let val;
-        let data = await this.orm.call("ybo_pos_cash_move.pos_cash_report", "enter_cheques", [
+        let enter_cheques = await this.orm.call("ybo_pos_cash_move.pos_cash_report", "enter_cheques", [
             val, pos_session_id
         ]);
-
-        console.log(data[0]);
-        console.log(data);
 
         this.savedBankChecksList = {
             ...this.savedBankChecksList,
-            value: data,
+            value: enter_cheques,
         };
 
-        let data2 = await this.orm.call("ybo_pos_cash_move.pos_cash_report", "last_counted_cheques", [
+        let last_counted_cheques = await this.orm.call("ybo_pos_cash_move.pos_cash_report", "last_counted_cheques", [
             val, pos_session_id
         ]);
-        console.log(data2);
 
-        data2.forEach(check => {
+        last_counted_cheques.forEach(check => {
             this.bankChecks.value.push({
                 ...check,
             })
         });
 
-        // this.bankChecks = {
-        //     ...this.bankChecks,
-        //     value: data2
-        // };
+        let bills = await this.orm.call("ybo_pos_cash_move.pos_cash_report", "get_withdraw_bill", [
+            val, pos_session_id
+        ]);
+        console.log("Money details", this.state.moneyDetails);
 
+        console.log("Bills From Backend", bills);
+
+        // Object.keys(this.state.moneyDetails).forEach(key => {
+        //     if (bills.hasOwnProperty(key)) {
+        //         this.state.moneyDetails[key] = bills[key];
+        //     }
+        // });
+
+        this.withdrawBills.value = bills;
+
+        // this.withdrawBills = [...bills];
     }
 
 
@@ -192,6 +203,7 @@ class CashMovePopupExtend extends Component {
         const cheque_amount_list = this.check_amounts.value;
         const fpos_amount = this.summaryAmountFpos();
         const fpos_list = this.fpos.value;
+        const is_final_count = this.state.isFinalCount;
 
         if (amount <= 0) {
             this.notification.add(_t("Cash in/out value can not be %s.", formattedAmount), 3000);
@@ -206,11 +218,11 @@ class CashMovePopupExtend extends Component {
             }
 
             if (operationType === "out") {
-                await this.saveCashInOutRecords(amount, reason, operationType, moneyDetails, cash_out_cheques, fpos_amount, fpos_list);
+                await this.saveCashInOutRecords(amount, reason, operationType, moneyDetails, cash_out_cheques, fpos_amount, fpos_list, false);
             } else if (operationType === "simple") {
-                await this.saveCashInOutRecords(amount, reason, operationType, moneyDetails, cheque_amount_list, fpos_amount, fpos_list);
+                await this.saveCashInOutRecords(amount, reason, operationType, moneyDetails, cheque_amount_list, fpos_amount, fpos_list, is_final_count);
             } else {
-                await this.saveCashInOutRecords(amount, reason, operationType, moneyDetails, [], 0, []);
+                await this.saveCashInOutRecords(amount, reason, operationType, moneyDetails, [], 0, [], false);
             }
 
 
@@ -229,16 +241,26 @@ class CashMovePopupExtend extends Component {
         }
     }
 
-    async saveCashInOutRecords(amount, reason, operationType, moneyDetails, cheques, fpos_amount, fpos_list) {
+    async saveCashInOutRecords(amount, reason, operationType, moneyDetails, cheques, fpos_amount, fpos_list, is_final_count) {
         let val;
         if (operationType == "simple") {
             await this.orm.call("ybo_pos_cash_move.pos_simple_count", "submit_cash_count", [
                 val, this.pos.pos_session.id,
                 this.pos.config.id, amount,
                 reason.trim(), moneyDetails,
-                cheques, fpos_amount, fpos_list,
+                cheques, fpos_amount, fpos_list, is_final_count
             ]);
 
+        } else if (operationType == "out") {
+            console.log("Cheques", cheques);
+
+            await this.orm.call("ybo_pos_cash_move.pos_cash_report", "submit_cash_count", [
+                val, this.pos.pos_session.id,
+                this.pos.config.id,
+                operationType, amount,
+                reason.trim(), moneyDetails,
+                operationType === "out" ? cheques : [], fpos_amount, fpos_list
+            ]);
         } else {
 
             await this.orm.call("ybo_pos_cash_move.pos_cash_report", "submit_cash_count", [
@@ -312,6 +334,19 @@ class CashMovePopupExtend extends Component {
      * Update the operation type when the radio button changes.
      */
     updateOperationType(event) {
+        if (event.target.value == "out") {
+            if (this.withdrawBills.value) {
+                Object.keys(this.state.moneyDetails).forEach(key => {
+                    if (this.withdrawBills.value.hasOwnProperty(key)) {
+                        this.state.moneyDetails[key] = this.withdrawBills.value[key];
+                    }
+                });
+            }
+        } else {
+            this.state.moneyDetails = this.props.moneyDetails
+                ? { ...this.props.moneyDetails }
+                : Object.fromEntries(this.pos.bills.map((bill) => [bill.value, 0]));
+        }
         this.state.operationType = event.target.value;
     }
 
@@ -465,7 +500,7 @@ class CashMovePopupExtend extends Component {
     }
 
     summaryAmountFpos() {
-        if (this.state.operationType === 'simple') {
+        if (this.state.operationType === 'simple' || this.state.operationType === 'out') {
             return this.fpos.value
                 .map(fpos_item => fpos_item.amount)
                 .reduce((total, amount) => total + parseFloat(amount), 0);

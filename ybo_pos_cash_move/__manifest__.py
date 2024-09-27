@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
-
 {
     'name': 'YBO POS Cash Move',
     'summary': 'Bill counting for POS',
     'description': 'Adds bill counting elements to the POS Cash In & Cash Out',
-    'version': '1.01',
+    'version': '1.0',
     'license': 'LGPL-3',
     'category': 'tools',
     'author': "YBO Services",

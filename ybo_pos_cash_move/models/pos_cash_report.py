@@ -27,13 +27,30 @@ class PosCashReport(models.Model):
     
     expected_cash = fields.Monetary(string='Expected cash', required=True, readonly=True,
                                     currency_field='currency_id',default=0)
+    
     total_bill_coin = fields.Monetary(string='Total bill/coin counted', required=True, readonly=True,
                                     currency_field='currency_id',default=0)
     
-    total_cheque = fields.Monetary(string='Total cheque amount counted', required=True, readonly=True,
+    total_cheque = fields.Monetary(string='Total cheque counted', required=True, readonly=True,
                                     currency_field='currency_id',default=0)
+    
     total_cheque_expected = fields.Monetary(string='Expected cheque', required=True, readonly=True,
                                     currency_field='currency_id',default=0 ,compute='_compute_total_expected_cheque')
+    
+    
+    total_pos_eft = fields.Monetary(string='Total FPOS  counted', required=True, readonly=True,
+                                    currency_field='currency_id',default=0)
+    
+    total_expect_f_pos = fields.Monetary(string='Total expected Fpos', required=True, readonly=True,
+                                    currency_field='currency_id',default=0)
+    
+    f_pos_list = fields.Json(string='FPOS List', readonly=True,default=[])
+    f_pos_list_display = fields.Char('FPOS list display', compute='_compute_f_pos_list_display', readonly=True)
+    
+    
+    f_pos_expected_list = fields.Json(string='FPOS expected List', readonly=True,default=[])
+    f_pos_expected_list_display = fields.Char('FPOS expected list display', compute='_compute_f_pos_expected_list_display', readonly=True)
+
     
     
     reference_code = fields.Text(string='Reference', readonly=True)
@@ -71,12 +88,29 @@ class PosCashReport(models.Model):
     
     expected_cheques = fields.Many2many('pos.payment', 'pos_cash_report_payment_rel', 'pos_cash_report_id', 'payment_id', string='Expected Cheques',readonly=True)
 
+    
 
     @api.depends('total_counted', 'count_type')
     def _compute_formatted_total_counted(self):
         for record in self:
             sign = '-' if record.count_type == 'out' else '+'
             record.formatted_total_counted = f"{sign} {record.total_counted:.2f}"
+            
+    @api.depends('f_pos_list')
+    def _compute_f_pos_list_display(self):
+        for record in self:
+            if record.f_pos_list and isinstance(record.f_pos_list, list):
+                record.f_pos_list_display = ' ,  '.join(map(lambda obj: str(obj['amount']), record.f_pos_list))
+            else:
+                record.f_pos_list_display = ''
+                
+    @api.depends('f_pos_list')
+    def _compute_f_pos_expected_list_display(self):
+        for record in self:
+            if record.f_pos_expected_list and isinstance(record.f_pos_expected_list, list):
+                record.f_pos_expected_list_display = ' ,  '.join(map(lambda obj: str(obj['amount']), record.f_pos_expected_list))
+            else:
+                record.f_pos_expected_list_display = ''        
             
     @api.depends('expected_cheques')
     def _compute_total_expected_cheque(self):
@@ -87,11 +121,11 @@ class PosCashReport(models.Model):
                 value = value + elt.amount       
             record.total_cheque_expected = value    
             
-    @api.depends('total_cheque_expected','total_bill_coin')
+    @api.depends('total_cheque_expected','expected_cash','total_expect_f_pos')
     def _compute_expected_amount(self):
         for record in self:
         
-            record.expected_amount = record.total_cheque_expected +  record.total_bill_coin 
+            record.expected_amount = record.total_cheque_expected +  record.expected_cash  + record.total_expect_f_pos
             
     @api.depends('expected_amount','total_counted')
     def _compute_amount_difference(self):
@@ -169,12 +203,28 @@ class PosCashReport(models.Model):
 
         return bill_totals , amount
 
-    def submit_cash_count(self, pos_session_id, pos_id, count_type, amount, cashier_comment, money_details,cheques=[]):
+    def submit_cash_count(self, pos_session_id, pos_id, count_type, amount, cashier_comment, money_details,cheques=[],f_pos=0,f_pos_list=[]):
         bill_totals,amount_bill = self.aggregate_cash_counts(money_details)
         
         expected_cash,total_amount_sold = self.get_expect_amount(pos_session_id,count_type)
         total_cheque = 0
-    
+        
+        latest_record = self.env['ybo_pos_cash_move.pos_cash_report'].search([('pos_session.id',"=",pos_session_id),('count_type','in',["in","out"]),('state',"=",'approved')],order='create_date desc', limit=1)
+        f_pos_expect_list = []
+        if len(latest_record) > 0 :
+        
+            f_pos_expected = 0
+            for rec in self.env['pos.payment'].search([("session_id.id","=",pos_session_id),("payment_method_id.name",'ilike', "bank"),('payment_date',">",latest_record[0].create_date)]):
+                f_pos_expected = f_pos_expected + rec.amount 
+                f_pos_expect_list.append({"amount":rec.amount})
+        else :
+            f_pos_expected = 0
+            for rec in self.env['pos.payment'].search([("session_id.id","=",pos_session_id),("payment_method_id.name",'ilike', "bank")]):
+                f_pos_expected = f_pos_expected + rec.amount 
+                f_pos_expect_list.append({"amount":rec.amount})
+            
+        
+        
         for cheque in cheques :
             
             total_cheque = total_cheque + float(cheque["amount"])
@@ -186,6 +236,10 @@ class PosCashReport(models.Model):
             "expected_cash" : expected_cash if expected_cash != None else amount ,
             'total_bill_coin' : amount_bill,
             "total_cheque" : total_cheque,
+            "total_pos_eft": f_pos,
+            "total_expect_f_pos" : f_pos_expected,
+            "f_pos_expected_list":f_pos_expect_list,
+            "f_pos_list":f_pos_list,
             'pos_session': pos_session_id,
             "total_amount_sold": total_amount_sold,
             'cashier_comment': cashier_comment,
@@ -278,6 +332,192 @@ class PosCashReport(models.Model):
             } 
             for payment in payments
         ]
+        
+    def get_amount_to_close_session(self,pos_session_id):
+        
+        last_simple_count = self.env['ybo_pos_cash_move.pos_simple_count'].search([('pos_session.id',"=",pos_session_id),('state',"=",'approved'),('final_count',"=",True),('state',"=",'approved')],order='create_date desc', limit=1)
+            
+        if len(last_simple_count) > 0 :
+            
+            payments = self.env['pos.payment'].search([("session_id.id","=",pos_session_id),('create_date',">",last_simple_count[0].create_date)],order='create_date desc')
+            
+            if len(payments) <=  0 :
+                latest_record = self.env['ybo_pos_cash_move.pos_cash_report'].search([('pos_session.id',"=",pos_session_id),('count_type','in',["in","out"]),('state',"=",'approved'),('create_date',">",last_simple_count[0].create_date)],order='create_date desc')
+        
+                result = {
+                    "can_close":True,
+                    "amount" : last_simple_count.total_bill_coin
+                }
+                
+                
+                for elt in latest_record : 
+                   result['amount'] += elt.total_bill_coin if elt.count_type == "in" else elt.total_bill_coin * -1
+                
+                return result
+                            
+        return {
+            "can_close":False,
+            "amount" : 0
+        }
+    
+    def get_last_session_bill(self,pos_id):
+        
+        pos_session = self.env["pos.session"].search([('config_id.id','=',pos_id),('state','=',"closed")],order='create_date desc', limit=1)
+        if len(pos_session) : 
+            
+            last_simple_count = self.env['ybo_pos_cash_move.pos_simple_count'].search([('pos_session.id',"=",pos_session.id),('state',"=",'approved')],order='create_date desc', limit=1)
+            
+            if len(last_simple_count) > 0 :
+                
+                payments = self.env['pos.payment'].search([("session_id.id","=",pos_session.id),('create_date',">",last_simple_count[0].create_date)],order='create_date desc')
+                
+                if len(payments) <=  0 :
+                    
+                    latest_record = self.env['ybo_pos_cash_move.pos_cash_report'].search([('pos_session.id',"=",pos_session.id),('count_type','in',["in","out"]),('state',"=",'approved'),('create_date',">",last_simple_count[0].create_date)],order='create_date desc')
+            
+                    result = {
+                        '5': last_simple_count[0].total_5_vt,
+                        '10':last_simple_count[0].total_10_vt,
+                        '20':last_simple_count[0].total_20_vt,
+                        '50': last_simple_count[0].total_50_vt,
+                        '100': last_simple_count[0].total_100_vt,
+                        '200': last_simple_count[0].total_200_vt,
+                        '500': last_simple_count[0].total_500_vt,
+                        '1000': last_simple_count[0].total_1000_vt,
+                        '2000': last_simple_count[0].total_2000_vt,
+                        '5000': last_simple_count[0].total_5000_vt,
+                        '10000': last_simple_count[0].total_10000_vt,
+                    }
+                    
+                    
+                    for elt in latest_record : 
+                        if elt.count_type == "in" :
+                            
+                            result['5'] += elt.total_5_vt
+                            result['10'] += elt.total_10_vt
+                            result['20'] += elt.total_20_vt
+                            result['50'] +=  elt.total_50_vt
+                            result['100'] +=  elt.total_100_vt
+                            result['200'] +=  elt.total_200_vt
+                            result['500'] +=  elt.total_500_vt
+                            result['1000'] +=  elt.total_1000_vt
+                            result['2000'] +=  elt.total_2000_vt
+                            result['5000'] +=  elt.total_5000_vt
+                            result['10000'] +=  elt.total_10000_vt
+                        else :
+                            result['5'] -= elt.total_5_vt
+                            result['10'] -= elt.total_10_vt
+                            result['20'] -= elt.total_20_vt
+                            result['50'] -=  elt.total_50_vt
+                            result['100'] -=  elt.total_100_vt
+                            result['200'] -=  elt.total_200_vt
+                            result['500'] -=  elt.total_500_vt
+                            result['1000'] -=  elt.total_1000_vt
+                            result['2000'] -=  elt.total_2000_vt
+                            result['5000'] -=  elt.total_5000_vt
+                            result['10000'] -=  elt.total_10000_vt
+                    
+                    return result
+                            
+        return  {
+            '5': 0,
+            '10': 0,
+            '20': 0,
+            '50': 0,
+            '100': 0,
+            '200': 0,
+            '500': 0,
+            '1000': 0,
+            '2000': 0,
+            '5000': 0,
+            '10000': 0,
+        }
+    
+    def get_withdraw_bill(self,pos_session_id):
+        
+        last_simple_count = self.env['ybo_pos_cash_move.pos_simple_count'].search([('pos_session.id',"=",pos_session_id),('state',"=",'approved'),],order='create_date desc', limit=1)
+            
+        if len(last_simple_count) > 0 :
+            
+            payments = self.env['pos.payment'].search([("session_id.id","=",pos_session_id),('create_date',">",last_simple_count[0].create_date)],order='create_date desc')
+            
+            if len(payments) <=  0 :
+                latest_record = self.env['ybo_pos_cash_move.pos_cash_report'].search([('pos_session.id',"=",pos_session_id),('count_type','in',["in","out"]),('state',"=",'approved'),('create_date',">",last_simple_count[0].create_date)],order='create_date desc')
+        
+                result = {
+                    '5': last_simple_count[0].total_5_vt_proposal,
+                    '10':last_simple_count[0].total_10_vt_proposal,
+                    '20':last_simple_count[0].total_20_vt_proposal,
+                    '50': last_simple_count[0].total_50_vt_proposal,
+                    '100': last_simple_count[0].total_100_vt_proposal,
+                    '200': last_simple_count[0].total_200_vt_proposal,
+                    '500': last_simple_count[0].total_500_vt_proposal,
+                    '1000': last_simple_count[0].total_1000_vt_proposal,
+                    '2000': last_simple_count[0].total_2000_vt_proposal,
+                    '5000': last_simple_count[0].total_5000_vt_proposal,
+                    '10000': last_simple_count[0].total_10000_vt_proposal,
+                }
+                
+                
+                for elt in latest_record : 
+                    if elt.count_type == "in" :
+                        
+                        result['5'] += elt.total_5_vt
+                        result['10'] += elt.total_10_vt
+                        result['20'] += elt.total_20_vt
+                        result['50'] +=  elt.total_50_vt
+                        result['100'] +=  elt.total_100_vt
+                        result['200'] +=  elt.total_200_vt
+                        result['500'] +=  elt.total_500_vt
+                        result['1000'] +=  elt.total_1000_vt
+                        result['2000'] +=  elt.total_2000_vt
+                        result['5000'] +=  elt.total_5000_vt
+                        result['10000'] +=  elt.total_10000_vt
+                    else :
+                        result['5'] -= elt.total_5_vt
+                        result['10'] -= elt.total_10_vt
+                        result['20'] -= elt.total_20_vt
+                        result['50'] -=  elt.total_50_vt
+                        result['100'] -=  elt.total_100_vt
+                        result['200'] -=  elt.total_200_vt
+                        result['500'] -=  elt.total_500_vt
+                        result['1000'] -=  elt.total_1000_vt
+                        result['2000'] -=  elt.total_2000_vt
+                        result['5000'] -=  elt.total_5000_vt
+                        result['10000'] -=  elt.total_10000_vt
+                
+                return result
+                        
+        return  {
+            '5': 0,
+            '10': 0,
+            '20': 0,
+            '50': 0,
+            '100': 0,
+            '200': 0,
+            '500': 0,
+            '1000': 0,
+            '2000': 0,
+            '5000': 0,
+            '10000': 0,
+        }
+            
+    def get_expect_amount(self,pos_session_id,count_type):
+        pos_session = self.env['pos.session'].browse(pos_session_id)
+        
+        data_val = pos_session.get_closing_control_data() 
+
+        
+        if count_type == "out" :
+            
+            val = data_val["default_cash_details"]["amount"] - 25000
+        
+            val = val if val > 0 else 0
+        
+            return  val ,data_val["orders_details"]["amount"]
+        
+        else :
+            return None , data_val["orders_details"]["amount"]
     
     def last_counted_cheques(self,pos_session_id):
         
@@ -306,26 +546,6 @@ class PosCashReport(models.Model):
     
             
         return []
-    
-    
-    
-    def get_expect_amount(self,pos_session_id,count_type):
-        pos_session = self.env['pos.session'].browse(pos_session_id)
-        
-        data_val = pos_session.get_closing_control_data() 
-
-        
-        if count_type == "out" :
-            
-            val = data_val["default_cash_details"]["amount"] - 25000
-        
-            val = val if val > 0 else 0
-        
-            return  val ,data_val["orders_details"]["amount"]
-        
-        else :
-            return None , data_val["orders_details"]["amount"]
-        
 
     def _generate_unique_reference(self, count_type):
         sequence_number = ''.join(str(random.randint(0, 9)) for _ in range(5))

@@ -22,9 +22,8 @@ import { patch } from "@web/core/utils/patch";
 patch(Navbar.prototype, {
     async closeSession() {
         const info = await this.pos.getClosePosInfo();
-        this.popup.add(ClosePosPopupExtend, { ...info, keepBehind: true, isActive: true });
-
-        console.log(info);
+  
+        this.popup.add(ClosePosPopupExtend, { ...info, keepBehind: true, isActive: true ,zIndex: 2});
     }
 })
 
@@ -48,6 +47,7 @@ export class ClosePosPopupExtend extends AbstractAwaitablePopup {
         "close",
         "confirmKey",
         "cancelKey",
+        "zIndex"
     ];
 
     setup() {
@@ -174,69 +174,89 @@ export class ClosePosPopupExtend extends AbstractAwaitablePopup {
         return true;
     }
     async closeSession() {
-        console.log(this.props.default_cash_details.amount);
+        let val;
+        console.log(this.props.default_cash_details);
+        const amount_to_close_session = await this.orm.call("ybo_pos_cash_move.pos_cash_report", "get_amount_to_close_session", [
+            val, this.pos.pos_session.id
+        ]);
+        console.log('amount_to_close_session', amount_to_close_session);
 
-        this.customerDisplay?.update({ closeUI: true });
-        if (this.pos.config.cash_control) {
-            const response = await this.orm.call(
-                "pos.session",
-                "post_closing_cash_details",
-                [this.pos.pos_session.id],
-                {
-                    counted_cash: this.props.default_cash_details.amount,
+        const { can_close, amount } = amount_to_close_session;
+
+
+        if (can_close) {
+            this.customerDisplay?.update({ closeUI: true });
+            if (this.pos.config.cash_control) {
+                const response = await this.orm.call(
+                    "pos.session",
+                    "post_closing_cash_details",
+                    [this.pos.pos_session.id],
+                    {
+                        counted_cash: amount,
+                    }
+                );
+
+                if (!response.successful) {
+                    return this.handleClosingError(response);
                 }
-            );
-
-            if (!response.successful) {
-                return this.handleClosingError(response);
             }
-        }
 
-        try {
-            await this.orm.call("pos.session", "update_closing_control_state_session", [
-                this.pos.pos_session.id,
-                this.state.notes,
-            ]);
-        } catch (error) {
-            // We have to handle the error manually otherwise the validation check stops the script.
-            // In case of "rescue session", we want to display the next popup with "handleClosingError".
-            // FIXME
-            if (!error.data && error.data.message !== "This session is already closed.") {
-                throw error;
+            try {
+                await this.orm.call("pos.session", "update_closing_control_state_session", [
+                    this.pos.pos_session.id,
+                    this.state.notes,
+                ]);
+            } catch (error) {
+                // We have to handle the error manually otherwise the validation check stops the script.
+                // In case of "rescue session", we want to display the next popup with "handleClosingError".
+                // FIXME
+                if (!error.data && error.data.message !== "This session is already closed.") {
+                    throw error;
+                }
             }
-        }
 
-        try {
-            const bankPaymentMethodDiffPairs = this.props.other_payment_methods
-                .filter((pm) => pm.type == "bank")
-                .map((pm) => [pm.id, this.getDifference(pm.id)]);
-            const response = await this.orm.call("pos.session", "close_session_from_ui", [
-                this.pos.pos_session.id,
-                bankPaymentMethodDiffPairs,
-            ]);
-            if (!response.successful) {
-                return this.handleClosingError(response);
-            }
-            window.location = "/web#action=point_of_sale.action_client_pos_menu";
-        } catch (error) {
-            if (error instanceof ConnectionLostError) {
-                // Cannot redirect to backend when offline, let error handlers show the offline popup
-                // FIXME POSREF: doing this means closing again when online will redo the beginning of the method
-                // although it's impossible to close again because this.closeSessionClicked isn't reset to false
-                // The application state is corrupted.
-                throw error;
-            } else {
-                // FIXME POSREF: why are we catching errors here but not anywhere else in this method?
-                await this.popup.add(ErrorPopup, {
-                    title: _t("Closing session error"),
-                    body: _t(
-                        "An error has occurred when trying to close the session.\n" +
-                        "You will be redirected to the back-end to manually close the session."
-                    ),
-                });
+            try {
+                const bankPaymentMethodDiffPairs = this.props.other_payment_methods
+                    .filter((pm) => pm.type == "bank")
+                    .map((pm) => [pm.id, this.getDifference(pm.id)]);
+                const response = await this.orm.call("pos.session", "close_session_from_ui", [
+                    this.pos.pos_session.id,
+                    bankPaymentMethodDiffPairs,
+                ]);
+                if (!response.successful) {
+                    return this.handleClosingError(response);
+                }
                 window.location = "/web#action=point_of_sale.action_client_pos_menu";
+            } catch (error) {
+                if (error instanceof ConnectionLostError) {
+                    // Cannot redirect to backend when offline, let error handlers show the offline popup
+                    // FIXME POSREF: doing this means closing again when online will redo the beginning of the method
+                    // although it's impossible to close again because this.closeSessionClicked isn't reset to false
+                    // The application state is corrupted.
+                    throw error;
+                } else {
+                    // FIXME POSREF: why are we catching errors here but not anywhere else in this method?
+                    await this.popup.add(ErrorPopup, {
+                        title: _t("Closing session error"),
+                        body: _t(
+                            "An error has occurred when trying to close the session.\n" +
+                            "You will be redirected to the back-end to manually close the session."
+                        ),
+                    });
+                    window.location = "/web#action=point_of_sale.action_client_pos_menu";
+                }
             }
+        } else {
+            await this.popup.add(ErrorPopup, {
+                title: _t("Closing session error"),
+                body: _t(
+                    "Make a final simple count before closing the session.\n" +
+                    "If you have already made a final simple count, wait an admin validation before closing."
+                ),
+            });
         }
+
+
     }
     async handleClosingError(response) {
         await this.popup.add(ErrorPopup, {

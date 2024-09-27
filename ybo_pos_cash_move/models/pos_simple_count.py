@@ -18,14 +18,14 @@ class PosSimpleCount(models.Model):
                                     currency_field='currency_id',default=0)
     
     expected_amount = fields.Monetary(string='Expected amount', required=True, readonly=True,
-                                    currency_field='currency_id',default=0)
+                                    currency_field='currency_id',default=0 ,compute='_compute_expected_amount')
+    total_difference = fields.Monetary(string='Difference', required=True, readonly=True,
+                                    currency_field='currency_id',default=0,compute='_compute_amount_difference')
     
     total_expect_f_pos = fields.Monetary(string='Total expected Fpos', required=True, readonly=True,
                                     currency_field='currency_id',default=0)
     
     total_amount_sold = fields.Monetary(string='Total amount sold', required=True, readonly=True,
-                                    currency_field='currency_id',default=0)
-    total_difference = fields.Monetary(string='Difference', required=True, readonly=True,
                                     currency_field='currency_id',default=0)
     
     expected_cash = fields.Monetary(string='Expected bill/coin', required=True, readonly=True,
@@ -75,17 +75,17 @@ class PosSimpleCount(models.Model):
     total_10000_vt = fields.Integer(string='10000VT Bills', default=0, readonly=True)
     
     
-    total_5_vt_proposal = fields.Integer(string='5VT Bills', default=0, readonly=True)
-    total_10_vt_proposal = fields.Integer(string='10VT Bills', default=0, readonly=True)
-    total_20_vt_proposal = fields.Integer(string='20VT Bills', default=0, readonly=True)
-    total_50_vt_proposal = fields.Integer(string='50VT Bills', default=0, readonly=True)
-    total_100_vt_proposal = fields.Integer(string='100VT Bills', default=0, readonly=True)
-    total_200_vt_proposal = fields.Integer(string='200VT Bills', default=0, readonly=True)
-    total_500_vt_proposal = fields.Integer(string='500VT Bills', default=0, readonly=True)
-    total_1000_vt_proposal = fields.Integer(string='1000VT Bills', default=0, readonly=True)
-    total_2000_vt_proposal = fields.Integer(string='2000VT Bills', default=0, readonly=True)
-    total_5000_vt_proposal = fields.Integer(string='5000VT Bills', default=0, readonly=True)
-    total_10000_vt_proposal = fields.Integer(string='10000VT Bills', default=0, readonly=True)
+    total_5_vt_proposal = fields.Integer(string='5VT Bills Propose', default=0, readonly=True)
+    total_10_vt_proposal = fields.Integer(string='10VT Bills Propose', default=0, readonly=True)
+    total_20_vt_proposal = fields.Integer(string='20VT Bills Propose', default=0, readonly=True)
+    total_50_vt_proposal = fields.Integer(string='50VT Bills Propose', default=0, readonly=True)
+    total_100_vt_proposal = fields.Integer(string='100VT Bills Propose', default=0, readonly=True)
+    total_200_vt_proposal = fields.Integer(string='200VT Bills Propose', default=0, readonly=True)
+    total_500_vt_proposal = fields.Integer(string='500VT Bills Propose', default=0, readonly=True)
+    total_1000_vt_proposal = fields.Integer(string='1000VT Bills Propose', default=0, readonly=True)
+    total_2000_vt_proposal = fields.Integer(string='2000VT Bills Propose', default=0, readonly=True)
+    total_5000_vt_proposal = fields.Integer(string='5000VT Bills Propose', default=0, readonly=True)
+    total_10000_vt_proposal = fields.Integer(string='10000VT Bills Propose', default=0, readonly=True)
     
     state = fields.Selection([('pending', 'Pending'), ('approved', 'Approved'),('rejected', 'Rejected')],
                             string='Admin Decision', default='pending')
@@ -99,6 +99,8 @@ class PosSimpleCount(models.Model):
     cheques_id = fields.One2many("ybo_pos_cash_move.pos_simple_count_cheque","pos_cash_report_id",string="Cheques",readonly=True)
     
     expected_cheques = fields.Many2many('pos.payment', 'simple_count_payment_rel', 'simple_count_id', 'payment_id', string='Expected Cheque',readonly=True)
+    
+    final_count = fields.Boolean(string='Final Count',default=False)
 
     @api.depends('total_counted',)
     def _compute_formatted_total_counted(self):
@@ -126,6 +128,24 @@ class PosSimpleCount(models.Model):
                 record.f_pos_expected_list_display = ' ,  '.join(map(lambda obj: str(obj['amount']), record.f_pos_expected_list))
             else:
                 record.f_pos_expected_list_display = ''
+    
+            
+    @api.depends('total_cheque_expected','expected_cash','total_expect_f_pos')
+    def _compute_expected_amount(self):
+        for record in self:
+            
+            print(record.total_cheque_expected,record.expected_cash,record.total_expect_f_pos)
+        
+            record.expected_amount = record.total_cheque_expected +  record.expected_cash  + record.total_expect_f_pos
+            
+            
+            
+    @api.depends('expected_amount','total_counted')
+    def _compute_amount_difference(self):
+        for record in self:
+        
+            record.total_difference =  record.total_counted - record.expected_amount         
+    
                 
     @api.depends('expected_cheques')
     def _compute_total_expected_cheque(self):
@@ -239,7 +259,7 @@ class PosSimpleCount(models.Model):
 
         return bill_totals , amount
 
-    def submit_cash_count(self, pos_session_id, pos_id, amount, cashier_comment, money_details,cheques=[],f_pos=0,f_pos_list=[]):
+    def submit_cash_count(self, pos_session_id, pos_id, amount, cashier_comment, money_details,cheques=[],f_pos=0,f_pos_list=[],final_count=False):
         bill_totals,amount_bill = self.aggregate_cash_counts(money_details)
         
         expected_amount,expected_cash,total_amount_sold = self.get_expect_amount(pos_session_id)
@@ -250,12 +270,12 @@ class PosSimpleCount(models.Model):
         if len(latest_record) > 0 :
         
             f_pos_expected = 0
-            for rec in self.env['pos.payment'].search([("session_id.id","=",pos_session_id),("payment_method_id.name",'in', ["Fpos","fpos","FPOS","FPOS",'FPOS']),('payment_date',">",latest_record[0].create_date)]):
+            for rec in self.env['pos.payment'].search([("session_id.id","=",pos_session_id),("payment_method_id.name",'ilike', "bank"),('payment_date',">",latest_record[0].create_date)]):
                 f_pos_expected = f_pos_expected + rec.amount 
                 f_pos_expect_list.append({"amount":rec.amount})
         else :
             f_pos_expected = 0
-            for rec in self.env['pos.payment'].search([("session_id.id","=",pos_session_id),("payment_method_id.name",'in', ["Fpos","fpos","FPOS","FPOS",'FPOS'])]):
+            for rec in self.env['pos.payment'].search([("session_id.id","=",pos_session_id),("payment_method_id.name",'ilike', "bank")]):
                 f_pos_expected = f_pos_expected + rec.amount 
                 f_pos_expect_list.append({"amount":rec.amount})
             
@@ -268,7 +288,6 @@ class PosSimpleCount(models.Model):
         vals = {
             'pos_id': pos_id,
             'total_counted': amount,
-            "expected_amount": expected_amount + f_pos if expected_amount != None else amount,
             "expected_cash" : expected_cash if expected_cash != None else amount ,
             'total_bill_coin' : amount_bill,
             "total_cheque" : total_cheque,
@@ -277,11 +296,11 @@ class PosSimpleCount(models.Model):
             "f_pos_expected_list":f_pos_expect_list,
             "f_pos_list":f_pos_list,
             'pos_session': pos_session_id,
-            "total_difference" : amount - (expected_amount if expected_amount != None else amount),
             "total_amount_sold": total_amount_sold,
             'cashier_comment': cashier_comment,
             'money_detail': money_details,
             'cashier_id': self.env.user.id,
+            "final_count" : final_count,
             'reference_code': self._generate_unique_reference(),
             **bill_totals,
         }

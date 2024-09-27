@@ -1,7 +1,7 @@
 {
-    'name': 'YBO POS Close POS',
-    'summary': 'Close POS Extended for POS',
-    'description': 'Close POS Extended for POS',
+    'name': 'YBO POS Cash Opening Popup',
+    'summary': 'Cash Opening Extended for POS',
+    'description': '',
     'version': '1.0',
     'license': 'LGPL-3',
     'category': 'tools',
@@ -13,12 +13,11 @@
     ],
     'assets': {
         'point_of_sale._assets_pos': [
-            'ybo_pos_close_pos/static/src/js/*.js',
-            'ybo_pos_close_pos/static/src/xml/*.xml',
-            'ybo_pos_close_pos/static/src/css/*.scss',
+            'ybo_pos_cash_opening_popup/static/src/js/*.js',
+            'ybo_pos_cash_opening_popup/static/src/xml/*.xml',
+            'ybo_pos_cash_opening_popup/static/src/css/*.scss',
         ]
     },
     'installable': True,
     'auto_install': False,
-    'application': True,
 }
