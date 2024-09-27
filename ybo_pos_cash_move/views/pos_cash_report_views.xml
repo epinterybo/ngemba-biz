@@ -19,7 +19,7 @@
                 <field name="count_type"/>
                 <field name="state" string="State"/>
                 <field name="currency_id" column_invisible="True" on_change="1"/>
-                <field name="formatted_total_counted" string="Amount (VT)"/>
+                <field name="formatted_total_counted" string="Amount (CFA)"/>
                 <field name="state" widget="badge" decoration-danger="state == 'rejected'" decoration-info="state == 'pending'" decoration-success="state =='approved'"/>
                 <field name="admin_id" string="Approved by" optional="hide"/>
                 <field name="approval_date_time" string="Approved On" optional="hide"/>
@@ -143,23 +143,23 @@
                             <div class="d-flex gap-4"> 
                                 <div class="w-50 w-md-25">
                                     <group>
-                                        <field name="total_10000_vt" string="10000 VT"/>
-                                        <field name="total_2000_vt" string="2000 VT"/>
-                                        <field name="total_5000_vt" string="5000 VT"/>
-                                        <field name="total_1000_vt" string="1000 VT"/>
-                                        <field name="total_500_vt" string="500 VT"/>
-                                        <field name="total_200_vt" string="200 VT"/>
+                                        <field name="total_10000_vt" string="10000 CFA"/>
+                                        <field name="total_2000_vt" string="2000 CFA"/>
+                                        <field name="total_5000_vt" string="5000 CFA"/>
+                                        <field name="total_1000_vt" string="1000 CFA"/>
+                                        <field name="total_500_vt" string="500 CFA"/>
+                                        <field name="total_200_vt" string="200 CFA"/>
                                 
                                     </group>
                                 </div>
                                 <div class="w-50 w-md-25">
                                     <group>
                                         
-                                        <field name="total_100_vt" string="100 VT"/>
-                                        <field name="total_50_vt" string="50 VT"/>
-                                        <field name="total_20_vt" string="20 VT"/>
-                                        <field name="total_10_vt" string="10 VT"/>
-                                        <field name="total_5_vt" string="5 VT"/>
+                                        <field name="total_100_vt" string="100 CFA"/>
+                                        <field name="total_50_vt" string="50 CFA"/>
+                                        <field name="total_20_vt" string="20 CFA"/>
+                                        <field name="total_10_vt" string="10 CFA"/>
+                                        <field name="total_5_vt" string="5 CFA"/>
                                     </group>
                                 </div>
 
